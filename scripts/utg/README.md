@@ -16,7 +16,7 @@ Instructions:
 2. Download or clone the [HL7 Unified Terminology Governance (UTG) repository].
 3. Run `scala-cli GenerateIndex.scala -- [path to the root of the UTG]`. The script writes out the index to
    STDOUT, so you will need to redirect that to a TSV file.
-  * For example, you might run `scala-cli GenerateIndex.scala -- /Users/username/github/UTG > index.tsv`
+   * For example, you might run `scala-cli GenerateIndex.scala -- /Users/username/github/UTG > index.tsv`
 
 [HL7 Unified Terminology Governance (UTG) repository]: https://github.com/HL7/UTG
 [Scala CLI]: https://scala-cli.virtuslab.org/
