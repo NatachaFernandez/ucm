@@ -10,7 +10,12 @@ To work around this problem and allow OWL reasoners to properly process your dat
 * rdf:rest --> fhir:rdfRest (an owl:ObjectProperty)
 * rdf:nil --> fhir:rdfNil
 
-The scripts below perform such conversions, and are provided as a convenience.  Other workaround strategies are possible.  Additional contributions are welcomed if you have another means of working around this problem.
+The scripts below perform such conversions, and are provided as a convenience.  Other workaround strategies are possible.  Additional contributions are welcomed if you have another means of working around this problem.  
+
+Typical usage pattern for the scripts below:
+1. Apply one of the below scripts to your data file.
+2. Merge the fhir.ttl ontology into your data file.
+3. Open in Protege or the tool of your choice.  This will still leave individuals as anonymous blank nodes.  To alleviate this problem you could also [skolemize](https://www.w3.org/TR/rdf12-semantics/#skolemization) those blank nodes to become IRIs.
 
 ## Scripts
 * SPARQL
