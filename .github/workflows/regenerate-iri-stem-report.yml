@@ -1,0 +1,33 @@
+# This workflow is responsible for regenerating the IRI stem report
+# It runs on a schedule and triggers the regeneration process
+
+name: Regenerate IRI stem report
+on:
+  push:
+
+jobs:
+  update-report:
+    runs-on: ubuntu-latest
+
+    name: "Regenerate IRI stem report"
+
+    steps:
+      # Get ready to run Scala CLI.
+      - name: Checkout GitHub repository
+        uses: actions/checkout@v5
+      - name: Set up Coursier caching
+        uses: coursier/cache-action@v6
+      - name: Set up Scala CLI
+        uses: VirtusLab/scala-cli-setup@main
+
+      # Retrieve the UTG GitHub repository.
+      - name: Retrieve UTG repository
+        run: mkdir -p tmp/hl7-utg && git clone --depth 1 https://gitlab.hl7.org/hl7/UTG.git hl7-utg
+
+      # Generate the report.
+      - name: Generate IRI stem report
+        run: scala-cli scripts/utg/GenerateIndex.scala tmp/hl7-utg > tmp/utg-iri-stem-report.txt
+
+      # Display the report.
+      - name: Display IRI stem report
+        run: cat tmp/utg-iri-stem-report.txt
