@@ -23,7 +23,10 @@ jobs:
 
       # Retrieve the UTG GitHub repository.
       - name: Retrieve UTG repository
-        run: mkdir -p tmp/hl7-utg && git clone --depth 1 https://gitlab.hl7.org/hl7/UTG.git hl7-utg
+        # TODO: We should really be using https://gitlab.hl7.org/hl7/UTG.git instead of
+        # the GitHub mirror, which is slightly out of date, but GitHub Action can't seem
+        # to see it.
+        run: mkdir -p tmp/hl7-utg && git clone --depth 1 https://github.com/HL7/UTG.git tmp/hl7-utg
 
       # Generate the report.
       - name: Generate IRI stem report
