@@ -30,7 +30,7 @@ jobs:
 
       # Generate the report.
       - name: Generate IRI stem report
-        run: scala-cli scripts/utg/GenerateIndex.scala tmp/hl7-utg > tmp/utg-iri-stem-report.txt
+        run: scala-cli scripts/utg/GenerateIndex.scala -- tmp/hl7-utg > tmp/utg-iri-stem-report.txt
 
       # Display the report.
       - name: Display IRI stem report
