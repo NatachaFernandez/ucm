@@ -4,6 +4,7 @@
 name: Regenerate IRI stem report
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   update-report:
