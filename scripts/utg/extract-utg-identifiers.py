@@ -19,6 +19,8 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+FHIR_NS = "http://hl7.org/fhir"
+
 @dataclass(slots=True)
 class Result:
     file: Path
@@ -31,6 +33,12 @@ class Result:
     status: str
 
     @property
+    def root_label_without_namespace(self):
+        if self.root_label.startswith("{" + FHIR_NS + "}"):
+            return self.root_label[len(FHIR_NS) + 2:]
+        return self.root_label
+
+    @property
     def description_field(self) -> str:
         """Collapse whitespace like the Scala regex."""
         return " ".join(self.description.split())
@@ -41,39 +49,43 @@ def attr(elem: ET.Element | None, name: str) -> str:
     return elem.attrib.get(name, "") if elem is not None else ""
 
 
-def find_attr(root: ET.Element, path: str, name: str = "value") -> str:
-    return attr(root.find(path), name)
+def find_attr(root: ET.Element, path: str, name: str = "value", namespaces=None) -> str:
+    if namespaces is None:
+        namespaces = {"fhir": FHIR_NS}
+    return attr(root.find(path, namespaces=namespaces), name)
 
 
 # ---------- indexing ----------
 
-def index_file(path: Path) -> Result | None:
+def index_file(path: Path, namespaces=None) -> Result | None:
+    if namespaces is None:
+        namespaces = {"fhir": FHIR_NS}
     try:
         with open(path, "r", encoding="utf-8") as file:
             tree = ET.parse(file)
             root = tree.getroot()
 
             unique_ids = {
-                attr(uid.find("type"), "value"): attr(uid.find("value"), "value")
-                for uid in root.findall("uniqueId")
+                attr(uid.find("fhir:type", namespaces=namespaces), "value"): attr(uid.find("fhir:value", namespaces=namespaces), "value")
+                for uid in root.findall("fhir:uniqueId", namespaces=namespaces)
             }
 
             identifiers = {
-                attr(ident.find("type/coding/code"), "value"): attr(
-                    ident.find("value"), "value"
+                attr(ident.find("fhir:type/fhir:coding/fhir:code", namespaces=namespaces), "value"): attr(
+                    ident.find("fhir:value", namespaces=namespaces), "value"
                 )
-                for ident in root.findall("identifier")
+                for ident in root.findall("fhir:identifier", namespaces=namespaces)
             }
 
             return Result(
                 file=path,
                 root_label=root.tag,
-                id=find_attr(root, "id"),
-                url=find_attr(root, "url"),
+                id=find_attr(root, "fhir:id", namespaces=namespaces),
+                url=find_attr(root, "fhir:url", namespaces=namespaces),
                 unique_ids=unique_ids | identifiers,
-                description=find_attr(root, "description"),
-                publisher=find_attr(root, "publisher"),
-                status=find_attr(root, "status"),
+                description=find_attr(root, "fhir:description", namespaces=namespaces),
+                publisher=find_attr(root, "fhir:publisher", namespaces=namespaces),
+                status=find_attr(root, "fhir:status", namespaces=namespaces),
             )
 
     except Exception as exc:
@@ -128,7 +140,7 @@ def generate_index(paths: tuple[Path, ...], output) -> None:
     for result in sorted(results, key=lambda r: r.id):
         row = {
             "file": result.file,
-            "root_label": result.root_label,
+            "root_label": result.root_label_without_namespace,
             "id": result.id,
             "url": result.url,
             "description": result.description_field,
