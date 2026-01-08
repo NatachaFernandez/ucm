@@ -147,9 +147,16 @@ def generate_index(paths: tuple[Path, ...], output) -> None:
             "publisher": result.publisher,
             "status": result.status,
         }
+        unique_id_types = set()
         for t in result.unique_ids:
-            row[f"uniqueIdType={t}"] = result.unique_ids.get(t, "")
-        writer.writerow(row)
+            value = result.unique_ids.get(t, "")
+            row[f"uniqueIdType={t}"] = value
+            if value:
+                unique_id_types.add(t)
+
+        # We're not interested unless there's atleast one type.
+        if unique_id_types:
+            writer.writerow(row)
 
 
 if __name__ == "__main__":
