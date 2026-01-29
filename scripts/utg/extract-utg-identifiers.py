@@ -1,18 +1,20 @@
 #!/usr/bin/env -S uv run
 # /// script
 # requires-python = ">=3.12"
-# dependencies = ["click>=8.1"]
+# dependencies = [
+#   "click>=8.1",
+#   "py-markdown-table>=1.3.0"
+# ]
 # ///
 
 from __future__ import annotations
 
 import csv
-import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Iterable
 
 import click
+from py_markdown_table.markdown_table import markdown_table
 import xml.etree.ElementTree as ET
 import logging
 
@@ -61,7 +63,7 @@ def index_file(path: Path, namespaces=None) -> Result | None:
     if namespaces is None:
         namespaces = {"fhir": FHIR_NS}
     try:
-        with open(path, "r", encoding="utf-8") as file:
+        with open(path, "r") as file:
             tree = ET.parse(file)
             root = tree.getroot()
 
@@ -111,7 +113,19 @@ def index_file(path: Path, namespaces=None) -> Result | None:
     type=click.File("w", encoding="utf-8"),
     default="-",
 )
-def generate_index(paths: tuple[Path, ...], output) -> None:
+@click.option(
+    '--id-type',
+    'id_types',
+    multiple=True,
+    help='Only include identifiers of the given type. May be specified multiple times.'
+)
+@click.option(
+    '--format', '-f',
+    'output_format',
+    type=click.Choice(['csv', 'markdown']),
+    default='csv',
+)
+def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> None:
     """
     Generate an index of all the identifiers from one or more HL7 UTG directories.
     The primary HL7 UTG repository is at https://github.com/HL7/UTG
@@ -129,14 +143,16 @@ def generate_index(paths: tuple[Path, ...], output) -> None:
         {key for r in results for key in r.unique_ids}
     )
 
+    if id_types:
+        unique_id_types = [t for t in unique_id_types if t in id_types]
+
     # Write output as a CSV file.
     field_names = ["file", "root_label", "id", "url", "description", "publisher", "status"]
     for t in unique_id_types:
         field_names.append(f"uniqueIdType={t}")
-    writer = csv.DictWriter(output, fieldnames=field_names)
-    writer.writeheader()
 
-    # rows
+    # Prepare rows
+    rows = []
     for result in sorted(results, key=lambda r: r.id):
         row = {
             "file": result.file,
@@ -149,15 +165,26 @@ def generate_index(paths: tuple[Path, ...], output) -> None:
         }
         unique_id_types = set()
         for t in result.unique_ids:
+            if id_types and t not in id_types:
+                continue
             value = result.unique_ids.get(t, "")
             row[f"uniqueIdType={t}"] = value
             if value:
                 unique_id_types.add(t)
 
-        # We're not interested unless there's atleast one type.
+        # We're not interested unless there's at least one ID type.
         if unique_id_types:
-            writer.writerow(row)
+            rows.append(row)
 
+    # Write out output.
+    if output_format == 'csv':
+        writer = csv.DictWriter(output, fieldnames=field_names)
+        writer.writeheader()
+        writer.writerows(rows)
+    elif output_format == 'markdown':
+        output.write(markdown_table(rows).get_markdown())
+    else:
+        raise ValueError(f"Unknown output format: {output_format}")
 
 if __name__ == "__main__":
     generate_index()

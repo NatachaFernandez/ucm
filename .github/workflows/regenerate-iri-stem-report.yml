@@ -13,14 +13,6 @@ jobs:
     name: "Regenerate IRI stem report"
 
     steps:
-      # Get ready to run Scala CLI.
-      - name: Checkout GitHub repository
-        uses: actions/checkout@v5
-      - name: Set up Coursier caching
-        uses: coursier/cache-action@v6
-      - name: Set up Scala CLI
-        uses: VirtusLab/scala-cli-setup@main
-
       # Retrieve the UTG GitHub repository.
       - name: Retrieve UTG repository
         # TODO: We should really be using https://gitlab.hl7.org/hl7/UTG.git instead of
@@ -28,10 +20,14 @@ jobs:
         # to see it.
         run: mkdir -p tmp/hl7-utg && git clone --depth 1 https://github.com/HL7/UTG.git tmp/hl7-utg
 
+      # Get ready to run scripts/utg/extract-utg-identifiers.py
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+
       # Generate the report.
       - name: Generate IRI stem report
-        run: scala-cli scripts/utg/GenerateIndex.scala -- tmp/hl7-utg > tmp/utg-iri-stem-report.txt
+        run: uv run scripts/utg/extract-utg-identifiers.py --id-type iri-stem tmp/hl7-utg -o tmp/utg-iri-stem-report.csv -f markdown
 
       # Display the report.
       - name: Display IRI stem report
-        run: cat tmp/utg-iri-stem-report.txt
+        run: cat tmp/utg-iri-stem-report.md
