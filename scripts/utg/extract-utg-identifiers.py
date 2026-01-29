@@ -182,7 +182,9 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
         writer.writeheader()
         writer.writerows(rows)
     elif output_format == 'markdown':
-        output.write(markdown_table(rows).get_markdown())
+        output.write(markdown_table(rows)
+                        .set_params(row_sep='markdown', quote=False)
+                        .get_markdown())
     else:
         raise ValueError(f"Unknown output format: {output_format}")
 
