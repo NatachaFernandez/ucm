@@ -10,6 +10,7 @@
 from __future__ import annotations
 
 import csv
+import json
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -94,6 +95,12 @@ def index_file(path: Path, namespaces=None) -> Result | None:
         logger.error(f"Error parsing {path}: {exc}")
         return None
 
+# ---------- Helpers ------
+
+def get_unique_id_colname(unique_id_type: str) -> str:
+    if not unique_id_type:
+        return "Unique ID: (none)"
+    return "Unique ID: " + unique_id_type
 
 # ---------- CLI ----------
 
@@ -147,9 +154,12 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
         unique_id_types = [t for t in unique_id_types if t in id_types]
 
     # Write output as a CSV file.
-    field_names = ["source", "url", "status", "status"]
+    field_names = ["source", "url", "status"]
     for t in unique_id_types:
-        field_names.append(f"uniqueIdType={t}")
+        field_names.append(get_unique_id_colname(t))
+
+    # Track which unique ID types we're producing.
+    unique_id_types = set()
 
     # Prepare rows
     rows = []
@@ -160,18 +170,24 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
             # "description": result.description_field,
             "status": result.status,
         }
-        unique_id_types = set()
         for t in result.unique_ids:
             if id_types and t not in id_types:
                 continue
             value = result.unique_ids.get(t, "")
-            row[f"uniqueIdType={t}"] = value
+            row[get_unique_id_colname(t)] = value
             if value:
                 unique_id_types.add(t)
 
         # We're not interested unless there's at least one ID type.
         if unique_id_types:
             rows.append(row)
+
+    # Markdown requires every row to have every column, so we need to fit in the uniqueIds we're missing.
+    for row in rows:
+        for t in unique_id_types:
+            if get_unique_id_colname(t) not in row:
+                row[get_unique_id_colname(t)] = ""
+    logging.debug(f"Rows standardized to {unique_id_types}: {json.dumps(rows, indent=2)}")
 
     # Write out output.
     if output_format == 'csv':
