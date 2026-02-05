@@ -1,3 +1,6 @@
+
+<!-- The script doesn't put a final newline on the Markdown table, so we need to leave a blank line here. -->
+
 ## How is this generated?
 
 This table is automatically updated by the
