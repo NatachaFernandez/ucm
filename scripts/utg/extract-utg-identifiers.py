@@ -201,10 +201,8 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
     empty_filtered_id_types = set(unique_id_types) - non_empty_filtered_id_types
     for row in rows:
         for t in unique_id_types:
-            if get_unique_id_colname(t) not in row:
+            if get_unique_id_colname(t) not in row and t not in empty_filtered_id_types:
                 row[get_unique_id_colname(t)] = ""
-        for t in empty_filtered_id_types:
-            del row[get_unique_id_colname(t)]
 
     # Add the final filtered ID types to the field names.
     for t in sorted(non_empty_filtered_id_types):
