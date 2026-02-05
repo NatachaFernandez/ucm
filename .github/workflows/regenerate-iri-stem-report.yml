@@ -79,3 +79,4 @@ jobs:
           commit-message: "chore: update data/utg/iri-stems-in-hl7.md (automated)"
           delete-branch: false   # keep false so branch/PR can be updated on next run; set true if you prefer branch cleanup after merge
           labels: automated
+          add-paths: data/utg/iri-stems-in-hl7.md
