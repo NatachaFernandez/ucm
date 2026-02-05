@@ -154,7 +154,7 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
         unique_id_types = [t for t in unique_id_types if t in id_types]
 
     # Write output as a CSV file.
-    field_names = ["source", "url", "status"]
+    field_names = ["Source", "URL", "Status"]
 
     # Track which unique ID types we're producing.
     unique_id_types = set()
@@ -163,10 +163,10 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
     rows = []
     for result in sorted(results, key=lambda r: r.id):
         row = {
-            "source": f"{result.id} ({result.publisher})",
-            "url": result.url,
+            "Source": f"{result.id} ({result.publisher})",
+            "URL": result.url,
             # "description": result.description_field,
-            "status": result.status,
+            "Status": result.status,
         }
         for t in result.unique_ids:
             value = result.unique_ids.get(t, "")
