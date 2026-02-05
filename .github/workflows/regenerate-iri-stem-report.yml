@@ -1,10 +1,19 @@
 # This workflow is responsible for regenerating the IRI stem report
 # It runs on a schedule and triggers the regeneration process
 
-name: Regenerate IRI stem report
+name: Regenerate IRI stems in HL7
 on:
   push:
   workflow_dispatch:
+
+# Least-privileged token permissions needed for writing files & PRs
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: regenerate-iri-stems-in-hl7
+  cancel-in-progress: true
 
 jobs:
   update-report:
@@ -22,12 +31,49 @@ jobs:
 
       # Get ready to run scripts/utg/extract-utg-identifiers.py
       - uses: actions/checkout@v6
+        with:
+          ref: 'refs/heads/master'
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Set up git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
       - uses: astral-sh/setup-uv@v7
 
       # Generate the report.
       - name: Generate IRI stem report
         run: uv run scripts/utg/extract-utg-identifiers.py --id-type iri-stem tmp/hl7-utg -o tmp/utg-iri-stem-report.csv -f markdown
 
-      # Display the report.
-      - name: Display IRI stem report
-        run: cat tmp/utg-iri-stem-report.md
+      - name: Create final report
+        run: cat data/utg/iri-stem-report-header.md tmp/utg-iri-stem-report.csv data/utg/iri-stem-report-footer.md > data/utg/iri-stems-in-hl7.md
+
+      - name: Check for changes to the single file
+        id: check_changes
+        run: |
+          # Stage only that one file to detect if it changed relative to checked out commit
+          git add -N data/utg/iri-stems-in-hl7.md || true
+          # Exit with code 0 if no diff; non-zero otherwise.
+          if git diff --quiet -- data/utg/iri-stems-in-hl7.md; then
+            echo "file_unchanged=true" >> $GITHUB_OUTPUT
+            echo "No changes in data/utg/iri-stems-in-hl7.md; exiting."
+            exit 0
+          else
+            echo "file_unchanged=false" >> $GITHUB_OUTPUT
+            echo "File changed."
+          fi
+
+      - name: Create or update PR (commit workspace changes)
+        uses: peter-evans/create-pull-request@v8.1.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: auto/update-iri-stems-in-hl7     # fixed branch name → updates existing PR if present
+          title: "Update IRI stem report"
+          body: |
+            This PR was opened automatically by .github/workflows/regenerate-iri-stem-report.yml.
+            It updates the generated file `data/utg/iri-stems-in-hl7.md`.
+          commit-message: "chore: update data/utg/iri-stems-in-hl7.md (automated)"
+          delete-branch: false   # keep false so branch/PR can be updated on next run; set true if you prefer branch cleanup after merge
+          labels: automated
