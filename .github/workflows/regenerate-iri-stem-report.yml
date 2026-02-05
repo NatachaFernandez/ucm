@@ -22,13 +22,6 @@ jobs:
     name: "Regenerate IRI stem report"
 
     steps:
-      # Retrieve the UTG GitHub repository.
-      - name: Retrieve UTG repository
-        # TODO: We should really be using https://gitlab.hl7.org/hl7/UTG.git instead of
-        # the GitHub mirror, which is slightly out of date, but GitHub Action can't seem
-        # to see it.
-        run: mkdir -p tmp/hl7-utg && git clone --depth 1 https://github.com/HL7/UTG.git tmp/hl7-utg
-
       # Get ready to run scripts/utg/extract-utg-identifiers.py
       - uses: actions/checkout@v6
         with:
@@ -44,6 +37,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       - uses: astral-sh/setup-uv@v7
+
+      # Retrieve the UTG GitHub repository.
+      - name: Retrieve UTG repository
+        # TODO: We should really be using https://gitlab.hl7.org/hl7/UTG.git instead of
+        # the GitHub mirror, which is slightly out of date, but GitHub Action can't seem
+        # to see it.
+        run: mkdir -p tmp/hl7-utg && git clone --depth 1 https://github.com/HL7/UTG.git tmp/hl7-utg
 
       # Generate the report.
       - name: Generate IRI stem report
