@@ -29,6 +29,7 @@ class Result:
     file: Path
     root_label: str
     id: str
+    title: str
     url: str
     unique_ids: dict[str, str]
     description: str
@@ -84,6 +85,7 @@ def index_file(path: Path, namespaces=None) -> Result | None:
                 file=path,
                 root_label=root.tag,
                 id=find_attr(root, "fhir:id", namespaces=namespaces),
+                title=find_attr(root, "fhir:title", namespaces=namespaces),
                 url=find_attr(root, "fhir:url", namespaces=namespaces),
                 unique_ids=unique_ids | identifiers,
                 description=find_attr(root, "fhir:description", namespaces=namespaces),
@@ -154,7 +156,7 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
         unique_id_types = [t for t in unique_id_types if t in id_types]
 
     # Write output as a CSV file.
-    field_names = ["Source", "URL", "Status"]
+    field_names = ["Source", "Title", "URL", "Status"]
 
     # Track which unique ID types we're producing.
     unique_id_types = set()
@@ -165,6 +167,7 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
         row = {
             "Source": f"{result.id} ({result.publisher})",
             "URL": result.url,
+            "Title": result.title,
             # "description": result.description_field,
             "Status": result.status,
         }
