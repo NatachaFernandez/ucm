@@ -190,7 +190,7 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
     if id_types:
         for row in rows:
             for id_type in id_types:
-                if get_unique_id_colname(id_type) in row:
+                if row[get_unique_id_colname(id_type)]:
                     filtered_rows.append(row)
                     break
     else:
