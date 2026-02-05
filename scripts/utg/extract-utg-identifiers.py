@@ -171,8 +171,6 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
             "status": result.status,
         }
         for t in result.unique_ids:
-            if id_types and t not in id_types:
-                continue
             value = result.unique_ids.get(t, "")
             row[get_unique_id_colname(t)] = value
             if value:
@@ -187,15 +185,25 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
         for t in unique_id_types:
             if get_unique_id_colname(t) not in row:
                 row[get_unique_id_colname(t)] = ""
+
+    filtered_rows = []
+    if id_types:
+        for row in rows:
+            for id_type in id_types:
+                if get_unique_id_colname(id_type) in row:
+                    filtered_rows.append(row)
+                    break
+    else:
+        filtered_rows = rows
     logging.debug(f"Rows standardized to {unique_id_types}: {json.dumps(rows, indent=2)}")
 
     # Write out output.
     if output_format == 'csv':
         writer = csv.DictWriter(output, fieldnames=field_names)
         writer.writeheader()
-        writer.writerows(rows)
+        writer.writerows(filtered_rows)
     elif output_format == 'markdown':
-        output.write(markdown_table(rows)
+        output.write(markdown_table(filtered_rows)
                         .set_params(row_sep='markdown', quote=False)
                         .get_markdown())
     else:
