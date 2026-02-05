@@ -32,7 +32,9 @@ jobs:
       # Get ready to run scripts/utg/extract-utg-identifiers.py
       - uses: actions/checkout@v6
         with:
-          ref: 'refs/heads/master'
+          # TODO: we need to checkout the gh-pages branch for the PR to be able to update it,
+          # but it doesn't have our scripts yet.
+          # ref: gh-pages
           fetch-depth: 0
           persist-credentials: true
 
