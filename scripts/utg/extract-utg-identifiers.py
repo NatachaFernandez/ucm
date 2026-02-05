@@ -155,8 +155,6 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
 
     # Write output as a CSV file.
     field_names = ["source", "url", "status"]
-    for t in unique_id_types:
-        field_names.append(get_unique_id_colname(t))
 
     # Track which unique ID types we're producing.
     unique_id_types = set()
@@ -180,22 +178,40 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
         if unique_id_types:
             rows.append(row)
 
+    # FILTERING
+    # First, let's filter to id_types if we have any.
+    filtered_rows = []
+    non_empty_filtered_id_types = set()
+    if id_types:
+        for row in rows:
+            for id_type in id_types:
+                flag_select_row = False
+                if get_unique_id_colname(id_type) in row and row[get_unique_id_colname(id_type)]:
+                    flag_select_row = True
+                    non_empty_filtered_id_types.add(id_type)
+
+                if flag_select_row:
+                    filtered_rows.append(row)
+    else:
+        filtered_rows = rows
+
     # Markdown requires every row to have every column, so we need to fit in the uniqueIds we're missing.
+    # But this is also an opportunity to remove any ID types that would be completely empty in the new table
+    # (i.e. that have values in rows but not in filtered_rows).
+    empty_filtered_id_types = set(unique_id_types) - non_empty_filtered_id_types
     for row in rows:
         for t in unique_id_types:
             if get_unique_id_colname(t) not in row:
                 row[get_unique_id_colname(t)] = ""
+        for t in empty_filtered_id_types:
+            del row[get_unique_id_colname(t)]
 
-    filtered_rows = []
-    if id_types:
-        for row in rows:
-            for id_type in id_types:
-                if row[get_unique_id_colname(id_type)]:
-                    filtered_rows.append(row)
-                    break
-    else:
-        filtered_rows = rows
-    logging.debug(f"Rows standardized to {unique_id_types}: {json.dumps(rows, indent=2)}")
+    # Add the final filtered ID types to the field names.
+    for t in sorted(non_empty_filtered_id_types):
+        field_names.append(get_unique_id_colname(t))
+
+    # Filtering done!
+    logging.debug(f"Rows filtered via {id_types} to {non_empty_filtered_id_types}: {json.dumps(rows, indent=2)}")
 
     # Write out output.
     if output_format == 'csv':

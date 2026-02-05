@@ -1,4 +1,4 @@
-|                                 source                                |                       url                      |status|     Unique ID: oid    |              Unique ID: uri             |    Unique ID: iri-stem    |Unique ID: (none)|Unique ID: other|
-|-----------------------------------------------------------------------|------------------------------------------------|------|-----------------------|-----------------------------------------|---------------------------|-----------------|----------------|
-|                  MeSH (National Library of Medicine)                  |  http://terminology.hl7.org/NamingSystem/MeSH  |active|2.16.840.1.113883.6.177|http://terminology.hl7.org/CodeSystem/MSH|http://id.nlm.nih.gov/mesh/|                 |                |
-|v3-loinc (LOINC and Health Data Standards, Regenstrief Institute, Inc.)|http://terminology.hl7.org/NamingSystem/v3-loinc|active| 2.16.840.1.113883.6.1 |             http://loinc.org            |   http://loinc.org/rdf/   |                 |                |
+|                                 source                                |                       url                      |status|    Unique ID: iri-stem    |
+|-----------------------------------------------------------------------|------------------------------------------------|------|---------------------------|
+|                  MeSH (National Library of Medicine)                  |  http://terminology.hl7.org/NamingSystem/MeSH  |active|http://id.nlm.nih.gov/mesh/|
+|v3-loinc (LOINC and Health Data Standards, Regenstrief Institute, Inc.)|http://terminology.hl7.org/NamingSystem/v3-loinc|active|   http://loinc.org/rdf/   |
