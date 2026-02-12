@@ -1,5 +1,6 @@
-# This workflow is responsible for regenerating the IRI stem report
-# It runs on a schedule and triggers the regeneration process
+# This workflow is responsible for regenerating the HL7 Terminology IRI stem report (../../data/utg/iri-stems-in-hl7.md).
+# It runs on a schedule and triggers the regeneration process.
+# See ../../scripts/utg/README.md#workflow for more details.
 
 name: Regenerate HL7 Terminology IRI Stem Table
 on:
