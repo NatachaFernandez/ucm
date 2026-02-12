@@ -148,13 +148,6 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
             if result is not None:
                 results.append(result)
 
-    unique_id_types = sorted(
-        {key for r in results for key in r.unique_ids}
-    )
-
-    if id_types:
-        unique_id_types = [t for t in unique_id_types if t in id_types]
-
     # Write output as a CSV file.
     field_names = ["Source", "Title", "URL", "Status"]
 
@@ -173,8 +166,8 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
         }
         for t in result.unique_ids:
             value = result.unique_ids.get(t, "")
-            row[get_unique_id_colname(t)] = value
             if value:
+                row[get_unique_id_colname(t)] = value
                 unique_id_types.add(t)
 
         # We're not interested unless there's at least one ID type.
@@ -188,15 +181,12 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
     if id_types:
         for row in rows:
             for id_type in id_types:
-                flag_select_row = False
                 if get_unique_id_colname(id_type) in row and row[get_unique_id_colname(id_type)]:
-                    flag_select_row = True
-                    non_empty_filtered_id_types.add(id_type)
-
-                if flag_select_row:
                     filtered_rows.append(row)
+                    non_empty_filtered_id_types.add(id_type)
     else:
         filtered_rows = rows
+        non_empty_filtered_id_types = set(unique_id_types)
 
     # Markdown requires every row to have every column, so we need to fit in the uniqueIds we're missing.
     # But this is also an opportunity to remove any ID types that would be completely empty in the new table
@@ -208,7 +198,7 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
                 row[get_unique_id_colname(t)] = ""
 
     # Add the final filtered ID types to the field names.
-    for t in sorted(non_empty_filtered_id_types):
+    for t in sorted(unique_id_types):
         field_names.append(get_unique_id_colname(t))
 
     # Filtering done!
