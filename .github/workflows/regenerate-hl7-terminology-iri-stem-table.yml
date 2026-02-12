@@ -78,7 +78,7 @@ jobs:
           branch: auto/regenerate-hl7-terminology-iri-stem-table # fixed branch name → updates existing PR if present
           title: "Update HL7 Terminology IRI Stem Table"
           body: |
-            This PR was opened automatically by .github/workflows/regenerate-iri-stem-report.yml.
+            This PR was opened automatically by .github/workflows/regenerate-hl7-terminology-iri-stem-table.yml.
             It updates the generated file `data/utg/iri-stems-in-hl7.md`.
           commit-message: "chore: update data/utg/iri-stems-in-hl7.md (automated)"
           delete-branch: false # keep false so branch/PR can be updated on next run; set true if you prefer branch cleanup after merge
