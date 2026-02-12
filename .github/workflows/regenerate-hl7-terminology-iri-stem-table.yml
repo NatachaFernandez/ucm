@@ -48,7 +48,7 @@ jobs:
 
       # Generate the Markdown table at tmp/tmp/utg-iri-stem-report.md.
       - name: Generate IRI stem report
-        run: uv run scripts/utg/extract-utg-identifiers.py --id-type iri-stem -f markdown -o tmp/utg-iri-stem-report.md tmp/hl7-utg
+        run: uv run scripts/utg/generate-hl7-terminology-iri-stem-table.py --id-type iri-stem -f markdown -o tmp/utg-iri-stem-report.md tmp/hl7-utg
 
       # Add the header and footer to the Markdown table to make the final report.
       - name: Create final report

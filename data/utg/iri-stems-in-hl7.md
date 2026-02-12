@@ -13,4 +13,4 @@ identifier.
 
 This table is automatically updated by the
 [Regenerate IRI Stems in HL7 GitHub Action](../../.github/workflows/regenerate-hl7-terminology-iri-stem-table.yml) on
-a regular schedule, using the [extract-utg-identifiers.py](../../scripts/utg/extract-utg-identifiers.py) script.
+a regular schedule, using the [extract-utg-identifiers.py](../../scripts/utg/generate-hl7-terminology-iri-stem-table.py) script.
