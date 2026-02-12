@@ -22,12 +22,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Use GitHub Actions' bot to make any changes.
-      - name: Set up git identity
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
       # Checkout our source code.
       - uses: actions/checkout@v6
         with:
@@ -36,6 +30,12 @@ jobs:
           # ref: gh-pages
           fetch-depth: 0
           persist-credentials: true
+
+      # Use GitHub Actions' bot to make any changes.
+      - name: Set up git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
       # Setup uv to run the Python script.
       - uses: astral-sh/setup-uv@v7
