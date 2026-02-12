@@ -56,8 +56,7 @@ jobs:
         run: cat data/utg/iri-stem-report-header.md tmp/utg-iri-stem-report.md data/utg/iri-stem-report-footer.md > data/utg/iri-stems-in-hl7.md
 
       # Has the final report changed? If not, exit early.
-      - name: Check for changes to the single file
-        id: check_changes
+      - name: Check for changes to the single file `data/utg/iri-stems-in-hl7.md`.
         run: |
           # Stage only that one file to detect if it changed relative to checked out commit
           git add -N data/utg/iri-stems-in-hl7.md || true
@@ -78,7 +77,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: auto/regenerate-hl7-terminology-iri-stem-table # fixed branch name → updates existing PR if present
           title: "Update HL7 Terminology IRI Stem Table"
-          reviewers: dbooth-boston
+          reviewers: dbooth-boston # comma-separated list of reviewers
           body: |
             This PR was opened automatically by .github/workflows/regenerate-hl7-terminology-iri-stem-table.yml.
             It updates the generated file `data/utg/iri-stems-in-hl7.md`.
