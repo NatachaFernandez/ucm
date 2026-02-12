@@ -198,7 +198,7 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
                 row[get_unique_id_colname(t)] = ""
 
     # Add the final filtered ID types to the field names.
-    for t in sorted(unique_id_types):
+    for t in sorted(non_empty_filtered_id_types):
         field_names.append(get_unique_id_colname(t))
 
     # Filtering done!
