@@ -188,18 +188,21 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
         filtered_rows = rows
         non_empty_filtered_id_types = set(unique_id_types)
 
-    # Markdown requires every row to have every column, so we need to fit in the uniqueIds we're missing.
-    # But this is also an opportunity to remove any ID types that would be completely empty in the new table
-    # (i.e. that have values in rows but not in filtered_rows).
-    empty_filtered_id_types = set(unique_id_types) - non_empty_filtered_id_types
-    for row in rows:
-        for t in unique_id_types:
-            if get_unique_id_colname(t) not in row and t not in empty_filtered_id_types:
-                row[get_unique_id_colname(t)] = ""
-
     # Add the final filtered ID types to the field names.
     for t in sorted(non_empty_filtered_id_types):
         field_names.append(get_unique_id_colname(t))
+
+    # Clean up filtered_rows to only have columns that are in field_names.
+    # Also add missing columns with empty values for consistency.
+    for row in filtered_rows:
+        # Remove columns not in field_names
+        keys_to_remove = [k for k in row.keys() if k not in field_names]
+        for k in keys_to_remove:
+            del row[k]
+        # Add missing columns with empty values
+        for field_name in field_names:
+            if field_name not in row:
+                row[field_name] = ""
 
     # Filtering done!
     logging.debug(f"Rows filtered via {id_types} to {non_empty_filtered_id_types}: {json.dumps(rows, indent=2)}")
