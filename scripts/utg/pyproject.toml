@@ -1,5 +1,5 @@
 [project]
-name = "extract-utg-identifiers"
+name = "generate-hl7-terminology-iri-stem-table"
 version = "1.0.0"
 requires-python = ">=3.12"
 dependencies = [
