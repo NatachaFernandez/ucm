@@ -2,8 +2,6 @@
 
 The scripts in this folder are intended to be used with the [HL7 Unified Terminology Governance (UTG) repository].
 
-* generate-hl7-terminology-iri-stem-table.py: A Python script for listing the HL7 UTG 
-
 ## Generate HL7 Terminology IRI Stem Table
 
 [generate-hl7-terminology-iri-stem-table.py](./generate-hl7-terminology-iri-stem-table.py) generates
