@@ -174,38 +174,38 @@ def generate_index(paths: tuple[Path, ...], id_types, output, output_format) -> 
         if unique_id_types:
             rows.append(row)
 
-    # FILTERING
-    # First, let's filter to id_types if we have any.
-    filtered_rows = []
-    non_empty_filtered_id_types = set()
+    # FILTERING: Keep only rows that have at least one of the requested ID types
     if id_types:
-        for row in rows:
-            for id_type in id_types:
-                if get_unique_id_colname(id_type) in row and row[get_unique_id_colname(id_type)]:
-                    filtered_rows.append(row)
-                    non_empty_filtered_id_types.add(id_type)
+        # Filter to rows with any of the requested ID types
+        filtered_rows = [
+            row for row in rows
+            if any(row.get(get_unique_id_colname(id_type)) for id_type in id_types)
+        ]
+        # Determine which requested ID types actually appear in the results
+        id_types_in_output = {
+            id_type for id_type in id_types
+            if any(row.get(get_unique_id_colname(id_type)) for row in filtered_rows)
+        }
     else:
+        # No filtering requested - keep all rows and all ID types
         filtered_rows = rows
-        non_empty_filtered_id_types = set(unique_id_types)
+        id_types_in_output = unique_id_types
 
-    # Add the final filtered ID types to the field names.
-    for t in sorted(non_empty_filtered_id_types):
-        field_names.append(get_unique_id_colname(t))
+    # Add ID type columns to field names
+    for id_type in sorted(id_types_in_output):
+        field_names.append(get_unique_id_colname(id_type))
 
-    # Clean up filtered_rows to only have columns that are in field_names.
-    # Also add missing columns with empty values for consistency.
+    # Normalize rows: keep only the columns in field_names, add missing columns as empty
     for row in filtered_rows:
-        # Remove columns not in field_names
-        keys_to_remove = [k for k in row.keys() if k not in field_names]
-        for k in keys_to_remove:
-            del row[k]
-        # Add missing columns with empty values
+        # Keep only fields that should be in the output
+        for key in list(row.keys()):
+            if key not in field_names:
+                del row[key]
+        # Ensure all expected columns exist
         for field_name in field_names:
-            if field_name not in row:
-                row[field_name] = ""
+            row.setdefault(field_name, "")
 
-    # Filtering done!
-    logging.debug(f"Rows filtered via {id_types} to {non_empty_filtered_id_types}: {json.dumps(rows, indent=2)}")
+    logging.debug(f"Filtered {len(rows)} rows to {len(filtered_rows)} rows with ID types: {id_types_in_output}")
 
     # Write out output.
     if output_format == 'csv':
