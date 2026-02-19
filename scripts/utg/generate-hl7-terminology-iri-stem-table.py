@@ -37,6 +37,13 @@ logger = logging.getLogger(__name__)
 FHIR_NS = "http://hl7.org/fhir"
 FHIR_NAMESPACES = {"fhir": FHIR_NS}
 
+# Prefix used for identifier-type columns in the output table.
+ID_COL_PREFIX = "Unique ID: "
+
+def id_col(id_type: str) -> str:
+    """Return the column name for an identifier type."""
+    return ID_COL_PREFIX + (id_type or "(none)")
+
 
 @dataclass(frozen=True, slots=True)
 class TerminologyMetadata:
@@ -50,21 +57,6 @@ class TerminologyMetadata:
     unique_ids: dict[str, str]  # Maps ID type (e.g., "oid", "iri-stem") to value
 
 
-def get_attr(elem: ET.Element | None, name: str) -> str:
-    """Get an attribute value from an XML element, returning empty string if not found."""
-    return elem.attrib.get(name, "") if elem is not None else ""
-
-
-def find_value_attr(root: ET.Element, path: str) -> str:
-    """
-    Find an element by XPath and return its 'value' attribute.
-
-    This is a convenience function for FHIR XML where most data is in value attributes.
-    """
-    elem = root.find(path, namespaces=FHIR_NAMESPACES)
-    return get_attr(elem, "value")
-
-
 def extract_metadata(path: Path) -> TerminologyMetadata | None:
     """
     Extract terminology metadata from a FHIR XML file.
@@ -73,40 +65,37 @@ def extract_metadata(path: Path) -> TerminologyMetadata | None:
     Returns None if the file cannot be parsed.
     """
     try:
-        tree = ET.parse(path)
-        root = tree.getroot()
+        root = ET.parse(path).getroot()
 
-        # Extract uniqueId elements (older FHIR format)
-        unique_ids = {
-            get_attr(uid.find("fhir:type", namespaces=FHIR_NAMESPACES), "value"):
-            get_attr(uid.find("fhir:value", namespaces=FHIR_NAMESPACES), "value")
-            for uid in root.findall("fhir:uniqueId", namespaces=FHIR_NAMESPACES)
-        }
+        # Helpers for reading FHIR XML, where data lives in 'value' attributes.
+        val = lambda elem: (elem.attrib.get("value", "") if elem is not None else "")
+        find = lambda xpath: val(root.find(xpath, FHIR_NAMESPACES))
 
-        # Extract identifier elements (newer FHIR format)
-        identifiers = {
-            get_attr(ident.find("fhir:type/fhir:coding/fhir:code", namespaces=FHIR_NAMESPACES), "value"):
-            get_attr(ident.find("fhir:value", namespaces=FHIR_NAMESPACES), "value")
-            for ident in root.findall("fhir:identifier", namespaces=FHIR_NAMESPACES)
-        }
+        # Extract uniqueId elements (older FHIR format).
+        unique_ids = {}
+        for uid in root.findall("fhir:uniqueId", namespaces=FHIR_NAMESPACES):
+            id_type = val(uid.find("fhir:type", namespaces=FHIR_NAMESPACES))
+            id_value = val(uid.find("fhir:value", namespaces=FHIR_NAMESPACES))
+            unique_ids[id_type] = id_value
+
+        # Extract identifier elements (newer FHIR format), merging on top.
+        for ident in root.findall("fhir:identifier", namespaces=FHIR_NAMESPACES):
+            id_type = val(ident.find("fhir:type/fhir:coding/fhir:code", namespaces=FHIR_NAMESPACES))
+            id_value = val(ident.find("fhir:value", namespaces=FHIR_NAMESPACES))
+            unique_ids[id_type] = id_value
 
         return TerminologyMetadata(
-            id=find_value_attr(root, "fhir:id"),
-            title=find_value_attr(root, "fhir:title"),
-            url=find_value_attr(root, "fhir:url"),
-            publisher=find_value_attr(root, "fhir:publisher"),
-            status=find_value_attr(root, "fhir:status"),
-            unique_ids=unique_ids | identifiers,
+            id=find("fhir:id"),
+            title=find("fhir:title"),
+            url=find("fhir:url"),
+            publisher=find("fhir:publisher"),
+            status=find("fhir:status"),
+            unique_ids=unique_ids,
         )
 
     except Exception as exc:
         logger.error(f"Error parsing {path}: {exc}")
         return None
-
-
-def format_id_type_column(id_type: str) -> str:
-    """Format an identifier type as a column name."""
-    return f"Unique ID: {id_type}" if id_type else "Unique ID: (none)"
 
 
 def build_rows(metadata_list: list[TerminologyMetadata]) -> tuple[list[dict], set[str]]:
@@ -134,7 +123,7 @@ def build_rows(metadata_list: list[TerminologyMetadata]) -> tuple[list[dict], se
         has_identifier = False
         for id_type, value in metadata.unique_ids.items():
             if value:  # Only add non-empty identifiers
-                row[format_id_type_column(id_type)] = value
+                row[id_col(id_type)] = value
                 all_id_types.add(id_type)
                 has_identifier = True
 
@@ -169,50 +158,16 @@ def filter_rows(
     # Keep rows that have at least one of the requested ID types
     filtered_rows = [
         row for row in rows
-        if any(row.get(format_id_type_column(id_type)) for id_type in requested_id_types)
+        if any(row.get(id_col(id_type)) for id_type in requested_id_types)
     ]
 
     # Determine which requested ID types actually appear in the filtered results
     id_types_in_output = {
         id_type for id_type in all_id_types
-        if any(row.get(format_id_type_column(id_type)) for row in filtered_rows)
+        if any(row.get(id_col(id_type)) for row in filtered_rows)
     }
 
     return filtered_rows, id_types_in_output
-
-
-def normalize_rows(rows: list[dict], field_names: list[str]) -> None:
-    """
-    Normalize rows to have exactly the columns in field_names.
-
-    Removes extra columns and adds missing columns with empty string values.
-    Modifies rows in place.
-    """
-    for row in rows:
-        # Remove columns not in field_names
-        for key in list(row.keys()):
-            if key not in field_names:
-                del row[key]
-
-        # Add missing columns with empty values
-        for field_name in field_names:
-            row.setdefault(field_name, "")
-
-
-def write_output(rows: list[dict], field_names: list[str], output_file, output_format: str) -> None:
-    """Write rows to output file in the specified format."""
-    if output_format == 'csv':
-        writer = csv.DictWriter(output_file, fieldnames=field_names)
-        writer.writeheader()
-        writer.writerows(rows)
-    elif output_format == 'markdown':
-        output_file.write(
-            markdown_table(rows)
-            .set_params(row_sep='markdown', quote=False)
-            .get_markdown()
-        )
-    else:
-        raise ValueError(f"Unknown output format: {output_format}")
 
 
 @click.command()
@@ -264,10 +219,8 @@ def generate_index(
 
     logger.info(f"Parsed {len(metadata_list)} XML files")
 
-    # Convert to table rows
+    # Convert to table rows, then filter by requested ID types if specified
     rows, all_id_types = build_rows(metadata_list)
-
-    # Filter by requested ID types if specified
     filtered_rows, id_types_in_output = filter_rows(rows, all_id_types, id_types)
 
     logger.info(
@@ -275,15 +228,29 @@ def generate_index(
         f"with ID types: {sorted(id_types_in_output)}"
     )
 
-    # Build field names: base fields + ID type columns
+    # Build field names: base fields + sorted ID type columns
     field_names = ["Source", "Title", "URL", "Status"]
-    field_names.extend(format_id_type_column(id_type) for id_type in sorted(id_types_in_output))
+    field_names.extend(id_col(id_type) for id_type in sorted(id_types_in_output))
 
-    # Normalize rows to have consistent columns
-    normalize_rows(filtered_rows, field_names)
+    # Normalize rows to have exactly the columns in field_names
+    for row in filtered_rows:
+        for key in list(row.keys()):
+            if key not in field_names:
+                del row[key]
+        for field_name in field_names:
+            row.setdefault(field_name, "")
 
     # Write output
-    write_output(filtered_rows, field_names, output, output_format)
+    if output_format == 'csv':
+        writer = csv.DictWriter(output, fieldnames=field_names)
+        writer.writeheader()
+        writer.writerows(filtered_rows)
+    elif output_format == 'markdown':
+        output.write(
+            markdown_table(filtered_rows)
+            .set_params(row_sep='markdown', quote=False)
+            .get_markdown()
+        )
 
 
 if __name__ == "__main__":
