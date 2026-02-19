@@ -45,9 +45,9 @@ jobs:
 
       # Retrieve the UTG GitHub repository to tmp/hl7-utg.
       - name: Retrieve UTG repository
-        # TODO: We should really be using https://gitlab.hl7.org/hl7/UTG.git instead of
-        # the GitHub mirror, which is slightly out of date, but GitHub Action can't seem
-        # to see it.
+        # We should really be using https://gitlab.hl7.org/hl7/UTG.git instead of
+        # the GitHub mirror, which is slightly out of date, but that needs authentication,
+        # and I don't want to add the extra burden of maintaining a personal access token.
         run: mkdir -p tmp/hl7-utg && git clone --depth 1 https://github.com/HL7/UTG.git tmp/hl7-utg
 
       # Generate the Markdown table at tmp/tmp/utg-iri-stem-report.md.
