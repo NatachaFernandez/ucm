@@ -173,7 +173,7 @@ def filter_rows(
 
     # Determine which requested ID types actually appear in the filtered results
     id_types_in_output = {
-        id_type for id_type in requested_id_types
+        id_type for id_type in all_id_types
         if any(row.get(format_id_type_column(id_type)) for row in filtered_rows)
     }
 
