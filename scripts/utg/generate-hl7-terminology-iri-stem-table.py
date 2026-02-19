@@ -37,18 +37,15 @@ logger = logging.getLogger(__name__)
 FHIR_NS = "http://hl7.org/fhir"
 FHIR_NAMESPACES = {"fhir": FHIR_NS}
 
-# Prefix used for identifier-type columns in the output table.
-ID_COL_PREFIX = "Unique ID: "
-
-def id_col(id_type: str) -> str:
+# Prefix used for uniqueId columns in the output table.
+def get_uniqueId_col_name(id_type: str) -> str:
     """Return the column name for an identifier type."""
-    return ID_COL_PREFIX + (id_type or "(none)")
+    return "Unique ID: " + (id_type or "(none)")
 
 
 @dataclass(frozen=True, slots=True)
 class TerminologyMetadata:
     """Metadata extracted from a FHIR terminology resource (NamingSystem, CodeSystem, etc.)."""
-
     id: str
     title: str
     url: str
@@ -123,7 +120,7 @@ def build_rows(metadata_list: list[TerminologyMetadata]) -> tuple[list[dict], se
         has_identifier = False
         for id_type, value in metadata.unique_ids.items():
             if value:  # Only add non-empty identifiers
-                row[id_col(id_type)] = value
+                row[get_uniqueId_col_name(id_type)] = value
                 all_id_types.add(id_type)
                 has_identifier = True
 
@@ -158,13 +155,13 @@ def filter_rows(
     # Keep rows that have at least one of the requested ID types
     filtered_rows = [
         row for row in rows
-        if any(row.get(id_col(id_type)) for id_type in requested_id_types)
+        if any(row.get(get_uniqueId_col_name(id_type)) for id_type in requested_id_types)
     ]
 
     # Determine which requested ID types actually appear in the filtered results
     id_types_in_output = {
         id_type for id_type in all_id_types
-        if any(row.get(id_col(id_type)) for row in filtered_rows)
+        if any(row.get(get_uniqueId_col_name(id_type)) for row in filtered_rows)
     }
 
     return filtered_rows, id_types_in_output
@@ -230,7 +227,7 @@ def generate_index(
 
     # Build field names: base fields + sorted ID type columns
     field_names = ["Source", "Title", "URL", "Status"]
-    field_names.extend(id_col(id_type) for id_type in sorted(id_types_in_output))
+    field_names.extend(get_uniqueId_col_name(id_type) for id_type in sorted(id_types_in_output))
 
     # Normalize rows to have exactly the columns in field_names
     for row in filtered_rows:
@@ -251,6 +248,8 @@ def generate_index(
             .set_params(row_sep='markdown', quote=False)
             .get_markdown()
         )
+    else:
+        raise ValueError(f"Invalid output format: {output_format} (must be 'csv' or 'markdown')")
 
 
 if __name__ == "__main__":
