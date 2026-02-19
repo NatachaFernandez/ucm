@@ -111,7 +111,7 @@ def build_rows(metadata_list: list[TerminologyMetadata]) -> tuple[list[dict], se
         # Build base row with standard fields
         row = {
             "Title": metadata.title,
-            "Source": metadata.publisher,
+            "Publisher": metadata.publisher,
             "URL": metadata.url,
             "Status": metadata.status,
         }
@@ -226,7 +226,7 @@ def generate_index(
     )
 
     # Build field names: base fields + sorted ID type columns
-    field_names = ["Title", "Source", "URL", "Status"]
+    field_names = ["Title", "Publisher", "URL", "Status"]
     field_names.extend(get_uniqueId_col_name(id_type) for id_type in sorted(id_types_in_output))
 
     # Normalize rows to have exactly the columns in field_names
