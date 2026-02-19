@@ -33,6 +33,7 @@ from py_markdown_table.markdown_table import markdown_table
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# FHIR namespace information.
 FHIR_NS = "http://hl7.org/fhir"
 FHIR_NAMESPACES = {"fhir": FHIR_NS}
 
