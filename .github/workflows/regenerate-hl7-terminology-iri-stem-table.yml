@@ -25,7 +25,7 @@ jobs:
 
     steps:
       # Checkout our source code.
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # (v6.0.2: https://github.com/actions/checkout/releases/tag/v6.0.2)
         with:
           # TODO: we need to checkout the gh-pages branch for the PR to be able to update it,
           # but it doesn't have our scripts yet.
@@ -40,7 +40,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
       # Setup uv to run the Python script.
-      - uses: astral-sh/setup-uv@v7
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # (v7.6.0: https://github.com/astral-sh/setup-uv/releases/tag/v7.6.0)
 
       # Retrieve the UTG GitHub repository to tmp/hl7-utg.
       - name: Retrieve UTG repository
@@ -74,7 +74,7 @@ jobs:
 
       # Create a PR to update the report if needed.
       - name: Create or update PR (commit workspace changes)
-        uses: peter-evans/create-pull-request@v8.1.0
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # (v8.1.0: https://github.com/peter-evans/create-pull-request/releases/tag/v8.1.0)
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: auto/regenerate-hl7-terminology-iri-stem-table # fixed branch name → updates existing PR if present
