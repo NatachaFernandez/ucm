@@ -3,7 +3,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #   "click==8.3.1",
-#   "lxml==5.3.0",
+#   "lxml==6.0.2",
 #   "py-markdown-table==1.3.0"
 # ]
 # ///
