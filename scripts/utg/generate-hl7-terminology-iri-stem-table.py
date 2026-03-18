@@ -51,7 +51,7 @@ class TerminologyMetadata:
     url: str
     publisher: str
     status: str
-    unique_ids: dict[str, str]  # Maps ID type (e.g., "oid", "iri-stem") to value
+    unique_ids: dict[str, list[str]]  # Maps ID type (e.g., "oid", "iri-stem") to list of values
 
 
 def extract_metadata(path: Path) -> TerminologyMetadata | None:
@@ -73,13 +73,13 @@ def extract_metadata(path: Path) -> TerminologyMetadata | None:
         for uid in root.findall("fhir:uniqueId", namespaces=FHIR_NAMESPACES):
             id_type = val(uid.find("fhir:type", namespaces=FHIR_NAMESPACES))
             id_value = val(uid.find("fhir:value", namespaces=FHIR_NAMESPACES))
-            unique_ids[id_type] = id_value
+            unique_ids.setdefault(id_type, []).append(id_value)
 
         # Extract identifier elements (newer FHIR format), merging on top.
         for ident in root.findall("fhir:identifier", namespaces=FHIR_NAMESPACES):
             id_type = val(ident.find("fhir:type/fhir:coding/fhir:code", namespaces=FHIR_NAMESPACES))
             id_value = val(ident.find("fhir:value", namespaces=FHIR_NAMESPACES))
-            unique_ids[id_type] = id_value
+            unique_ids.setdefault(id_type, []).append(id_value)
 
         return TerminologyMetadata(
             id=find("fhir:id"),
@@ -118,9 +118,10 @@ def build_rows(metadata_list: list[TerminologyMetadata]) -> tuple[list[dict], se
 
         # Add identifier columns for this row
         has_identifier = False
-        for id_type, value in metadata.unique_ids.items():
-            if value:  # Only add non-empty identifiers
-                row[get_uniqueId_col_name(id_type)] = value
+        for id_type, values in metadata.unique_ids.items():
+            joined = "; ".join(v for v in values if v)
+            if joined:
+                row[get_uniqueId_col_name(id_type)] = joined
                 all_id_types.add(id_type)
                 has_identifier = True
 
