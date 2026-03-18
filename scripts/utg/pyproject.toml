@@ -1,8 +1,0 @@
-[project]
-name = "generate-hl7-terminology-iri-stem-table"
-version = "1.0.0"
-requires-python = ">=3.12"
-dependencies = [
-    "click>=8.1",
-    "py-markdown-table>=1.3.0"
-]
