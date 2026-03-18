@@ -9,6 +9,6 @@ More details are available in the [scripts/utg README](../../scripts/utg/README.
 
 If this table seems out of date, then either the script that generates it may have broken, or the list of
 reviewers in the GitHub Action may need to be updated, because one of those reviewers needs to merge the new table
-version each time the automated script produces a new version. The listed reviewers are currently:
+version each time the automated script produces a new version. Currently, the listed reviewers are:
 - [@dbooth-boston](https://github.com/dbooth-boston)
 - [@ericprud](https://github.com/ericprud)

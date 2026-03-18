@@ -24,7 +24,7 @@ before running this script.
 ### Purpose
 
 This script was specifically written to be used in a [GitHub Action workflow](../../.github/workflows/regenerate-hl7-terminology-iri-stem-table.yml)
-that runs on a schedule and triggers a PR to update the [HL7 IRI stem table](../../data/utg/iri-stems-in-hl7.md)
+that runs on a schedule and triggers a PR to update the [HL7 IRI stem table]
 when the IRI stems in the UTG repository changes. Several features have been implemented to provide
 this functionality:
 
@@ -33,7 +33,7 @@ this functionality:
 
 ### Workflow
 
-The [GitHub Action workflow](../../.github/workflows/regenerate-hl7-terminology-iri-stem-table.yml) works as follows:
+The [Regenerate HL7 IRI Stem Table GitHub Action] works as follows:
 1. Download the UTG GitHub repo -- ideally we'd use the GitLab original instead of the GitHub mirror, but this doesn't seem to be accessible from the GitHub Action.
 2. Use a Python script (replacing the older Scala script) to extract the IRI Stems from UTG GitHub repo.
     * This script can be run with `uv run` -- it includes a `/// script` header that specified dependencies and minimum Python version.
@@ -44,6 +44,10 @@ The [GitHub Action workflow](../../.github/workflows/regenerate-hl7-terminology-
 4. If the Markdown file differs from the previous file (as judged with a `git commit`), then the `auto/update-iri-stems-in-hl7` branch will be updated with this change, and a PR will be generated with this change.
     * An example PR is available at https://github.com/gaurav/hcls-fhir-rdf/pull/3
     * Reusing the same branch name means that if the script runs again before the PR is merged, it will be updated rather than a new PR created.
-5. It will then be up to a human to review the change and merge it if it makes sense.
+5. It will then be up to a human to review the change and merge it if it makes sense. The list of reviewers
+   are specified in the [Regenerate HL7 IRI Stem Table GitHub Action], and are also listed in the
+   [HL7 IRI stem table].
 
 [HL7 Unified Terminology Governance (UTG) repository]: https://github.com/HL7/UTG
+[Regenerate HL7 IRI Stem Table GitHub Action]: ../../.github/workflows/regenerate-hl7-terminology-iri-stem-table.yml
+[HL7 IRI stem table]: ../../data/utg/iri-stems-in-hl7.md
