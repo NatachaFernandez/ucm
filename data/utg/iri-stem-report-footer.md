@@ -3,7 +3,12 @@
 
 ## How is this generated?
 
-This table is automatically updated by the
-[Regenerate IRI Stems in HL7 GitHub Action](../../.github/workflows/regenerate-hl7-terminology-iri-stem-table.yml) on
+This table is automatically updated by the [Regenerate IRI Stems in HL7 GitHub Action](../../.github/workflows/regenerate-hl7-terminology-iri-stem-table.yml) on
 a regular schedule, using the [generate-hl7-terminology-iri-stem-table.py](../../scripts/utg/generate-hl7-terminology-iri-stem-table.py) script.
 More details are available in the [scripts/utg README](../../scripts/utg/README.md).
+
+If this table seems out of date, then either the script that generates it may have broken, or the list of
+reviewers in the GitHub Action may need to be updated, because one of those reviewers needs to merge the new table
+version each time the automated script produces a new version. The listed reviewers are currently:
+- [@dbooth-boston](https://github.com/dbooth-boston)
+- [@ericprud](https://github.com/ericprud)
