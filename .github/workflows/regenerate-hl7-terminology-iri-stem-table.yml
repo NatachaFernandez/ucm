@@ -80,7 +80,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: auto/regenerate-hl7-terminology-iri-stem-table # fixed branch name → updates existing PR if present
           title: "Update HL7 Terminology IRI Stem Table"
-          reviewers: dbooth-boston # comma-separated list of reviewers
+          reviewers: dbooth-boston, ericprud # comma-separated list of reviewers
           body: |
             This PR was opened automatically by .github/workflows/regenerate-hl7-terminology-iri-stem-table.yml.
             It updates the generated file `data/utg/iri-stems-in-hl7.md`.
