@@ -4,7 +4,6 @@
 
 name: Regenerate HL7 Terminology IRI Stem Table
 on:
-  push: # TODO: remove this line once we're ready to run this workflow on schedule.
   workflow_dispatch:
   schedule:
     # Run this action every Tuesday at 4PM UTC (= 11am ET)
@@ -12,6 +11,7 @@ on:
 
 # Least-privileged token permissions needed for writing PRs
 permissions:
+  contents: write
   pull-requests: write
 
 concurrency:
@@ -31,7 +31,7 @@ jobs:
           # but it doesn't have our scripts yet.
           # ref: gh-pages
           fetch-depth: 0
-          persist-credentials: true
+          persist-credentials: false
 
       # Use GitHub Actions' bot to make any changes.
       - name: Set up git identity
