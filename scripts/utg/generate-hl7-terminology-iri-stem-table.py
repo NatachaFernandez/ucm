@@ -2,8 +2,8 @@
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
-#   "click>=8.1",
-#   "py-markdown-table>=1.3.0"
+#   "click==8.3.1",
+#   "py-markdown-table==1.3.0"
 # ]
 # ///
 """
