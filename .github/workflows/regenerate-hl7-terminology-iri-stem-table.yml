@@ -10,9 +10,8 @@ on:
     # Run this action every Tuesday at 4PM UTC (= 11am ET)
     - cron: '0 16 * * 2'
 
-# Least-privileged token permissions needed for writing files & PRs
+# Least-privileged token permissions needed for writing PRs
 permissions:
-  contents: write
   pull-requests: write
 
 concurrency:
