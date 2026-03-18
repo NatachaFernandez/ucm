@@ -3,6 +3,7 @@
 # requires-python = ">=3.12"
 # dependencies = [
 #   "click==8.3.1",
+#   "lxml==5.3.0",
 #   "py-markdown-table==1.3.0"
 # ]
 # ///
@@ -27,7 +28,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import click
-import xml.etree.ElementTree as ET
+from lxml import etree as ET
 from py_markdown_table.markdown_table import markdown_table
 
 logging.basicConfig(level=logging.INFO)
@@ -36,6 +37,15 @@ logger = logging.getLogger(__name__)
 # FHIR namespace information.
 FHIR_NS = "http://hl7.org/fhir"
 FHIR_NAMESPACES = {"fhir": FHIR_NS}
+
+# Hardened XML parser — blocks attacks relevant to the GitHub Actions runner.
+# FHIR XML files from HL7 UTG never use DTDs, so load_dtd=False is safe.
+_XML_PARSER = ET.XMLParser(
+    resolve_entities=False,  # Prevents XXE (external entity injection)
+    no_network=True,          # Prevents SSRF / DNS exfiltration (default True, explicit)
+    huge_tree=False,          # Prevents memory-exhaustion / billion-laughs
+    load_dtd=False,           # Don't load external DTD definitions
+)
 
 # Prefix used for uniqueId columns in the output table.
 def get_uniqueId_col_name(id_type: str) -> str:
@@ -62,7 +72,7 @@ def extract_metadata(path: Path) -> TerminologyMetadata | None:
     Returns None if the file cannot be parsed.
     """
     try:
-        root = ET.parse(path).getroot()
+        root = ET.parse(path, parser=_XML_PARSER).getroot()
 
         # Helpers for reading FHIR XML, where data lives in 'value' attributes.
         val = lambda elem: (elem.attrib.get("value", "") if elem is not None else "")
