@@ -37,9 +37,8 @@ The [Regenerate HL7 IRI Stem Table GitHub Action] works as follows:
 1. Download the UTG GitHub repo -- ideally we'd use the GitLab original instead of the GitHub mirror, but this doesn't seem to be accessible from the GitHub Action.
 2. Use a Python script (replacing the older Scala script) to extract the IRI Stems from UTG GitHub repo.
     * This script can be run with `uv run` -- it includes a `/// script` header that specified dependencies and minimum Python version.
-    * The Scala script is deleted in this PR.
     * The script uses command-line arguments to specify that only CodeSystems/NamingSystems containing IRI Stems should be written out, but that can be taken out if you want all the unique IDs.
-    * The script produces a Markdown table.
+    * The script can produce a Markdown table (for use in this pipeline) or a CSV file.
 3. The Markdown table produced by the Python script is then combined with a header and footer table to produce the final Markdown file.
 4. If the Markdown file differs from the previous file (as judged with a `git commit`), then the `auto/update-iri-stems-in-hl7` branch will be updated with this change, and a PR will be generated with this change.
     * An example PR is available at https://github.com/gaurav/hcls-fhir-rdf/pull/3
