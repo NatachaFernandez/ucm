@@ -4,6 +4,7 @@
 
 name: Regenerate HL7 Terminology IRI Stem Table
 on:
+  push:
   workflow_dispatch:
   schedule:
     # Run this action every Tuesday at 4PM UTC (= 11am ET)
