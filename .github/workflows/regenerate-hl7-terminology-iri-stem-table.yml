@@ -27,9 +27,6 @@ jobs:
       # Checkout our source code.
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # (v6.0.2: https://github.com/actions/checkout/releases/tag/v6.0.2)
         with:
-          # TODO: we need to checkout the gh-pages branch for the PR to be able to update it,
-          # but it doesn't have our scripts yet.
-          # ref: gh-pages
           fetch-depth: 0
           persist-credentials: false
 
@@ -79,7 +76,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: auto/regenerate-hl7-terminology-iri-stem-table # fixed branch name → updates existing PR if present
           title: "Update HL7 Terminology IRI Stem Table"
-          reviewers: dbooth-boston # comma-separated list of reviewers
+          reviewers: dbooth-boston, ericprud, tmprd # comma-separated list of reviewers
           body: |
             This PR was opened automatically by .github/workflows/regenerate-hl7-terminology-iri-stem-table.yml.
             It updates the generated file `data/utg/iri-stems-in-hl7.md`.
