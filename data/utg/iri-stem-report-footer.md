@@ -7,7 +7,7 @@ This table is automatically updated by the [Regenerate IRI Stems in HL7 GitHub A
 a regular schedule, using the [generate-hl7-terminology-iri-stem-table.py](../../scripts/utg/generate-hl7-terminology-iri-stem-table.py) script.
 More details are available in the [scripts/utg README](../../scripts/utg/README.md).
 
-If this table seems out of date, then the action or script that generates it may have broken, or the list of
-reviewers in the GitHub Action may need to be updated, because
-[one of those reviewers](https://github.com/gaurav/hcls-fhir-rdf/blob/5fefd6c02e66e1f3a4d459981f74264d342431da/.github/workflows/regenerate-hl7-terminology-iri-stem-table.yml#L82)
-needs to merge the new table version each time the automated script produces a new version.
+If this table seems out of date, then the action or script that generates it may have broken, or the
+[list of reviewers in the GitHub Action]((/.github/workflows/regenerate-hl7-terminology-iri-stem-table.yml#L79)
+may need to be updated, because one of those reviewers needs to merge the new table version each time the
+automated script produces a new version.
