@@ -1,4 +1,5 @@
 
+@prefix : <http://example.org/ucm#> .
 @prefix sulo: <http://example.org/sulo#> .
 @prefix ucm:  <http://example.org/ucm#> .
 @prefix role: <http://example.org/role#> .
