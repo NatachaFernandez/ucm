@@ -1,1085 +1,1017 @@
-@prefix : <http://example.org/ucm#> .
-@prefix bfo: <http://purl.obolibrary.org/obo/> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix ucm: <http://example.org/ucm#> .
-@prefix xml: <http://www.w3.org/XML/1998/namespace> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix role: <http://example.org/role#> .
 @prefix sulo: <http://example.org/sulo#> .
-@base <http://example.org/ucm#> .
-
-<http://example.org/ucm#> rdf:type owl:Ontology .
-
-#################################################################
-#    Object Properties
-#################################################################
-
-###  http://example.org/sulo#hasParticipant
-sulo:hasParticipant rdf:type owl:ObjectProperty .
-
-
-###  http://example.org/ucm#aboutEntity
-ucm:aboutEntity rdf:type owl:ObjectProperty ;
-                rdfs:domain ucm:Statement ;
-                rdfs:range sulo:Object ;
-                rdfs:comment "Relates a statement to an entity it concerns."@en ;
-                rdfs:label "about entity"@en .
-
-
-###  http://example.org/ucm#aboutProcess
-ucm:aboutProcess rdf:type owl:ObjectProperty ;
-                 rdfs:domain ucm:Statement ;
-                 rdfs:range sulo:Process ;
-                 rdfs:comment "Relates a statement to an occurrent it concerns."@en ;
-                 rdfs:label "about process"@en .
-
-
-###  http://example.org/ucm#addressesCondition
-ucm:addressesCondition rdf:type owl:ObjectProperty ;
-                       rdfs:domain ucm:CareProcess ;
-                       rdfs:range ucm:Condition ;
-                       rdfs:comment "Relates an occurrent to a condition it is intended to manage, monitor, treat, prevent, or otherwise influence."@en ;
-                       rdfs:label "addresses condition"@en .
-
-
-###  http://example.org/ucm#assertsCondition
-ucm:assertsCondition rdf:type owl:ObjectProperty ;
-                     rdfs:domain ucm:ClinicalStatement ;
-                     rdfs:range ucm:Condition ;
-                     rdfs:comment "Relates a statement to a condition it records or asserts."@en ;
-                     rdfs:label "asserts condition"@en .
-
-
-###  http://example.org/ucm#assignsEntity
-ucm:assignsEntity rdf:type owl:ObjectProperty ;
-                  rdfs:domain sulo:Process ;
-                  rdfs:range ucm:PhysicalEntity ;
-                  rdfs:comment "Relates an occurrent to something designated or allocated."@en ;
-                  rdfs:label "assigns entity"@en .
-
-
-###  http://example.org/ucm#assignsResource
-ucm:assignsResource rdf:type owl:ObjectProperty ;
-                    rdfs:domain sulo:Process ;
-                    rdfs:range ucm:PhysicalEntity ;
-                    rdfs:comment "Relates an occurrent to something allocated without necessarily transferring access or possession."@en ;
-                    rdfs:label "assigns resource"@en .
-
-
-###  http://example.org/ucm#assignsRole
-ucm:assignsRole rdf:type owl:ObjectProperty ;
-                rdfs:domain sulo:Process ;
-                rdfs:range ucm:ActorRole ;
-                rdfs:comment "Relates an occurrent to a role that is conferred or designated."@en ;
-                rdfs:label "assigns role"@en .
-
-
-###  http://example.org/ucm#authorizesProcess
-ucm:authorizesProcess rdf:type owl:ObjectProperty ;
-                      rdfs:domain ucm:AuthorizationProcess ;
-                      rdfs:range ucm:CareProcess ;
-                      rdfs:comment "Relates an occurrent to the activity whose performance is being permitted, denied, or constrained."@en ;
-                      rdfs:label "authorizes process"@en .
-
-
-###  http://example.org/ucm#authorizesServiceSpecification
-ucm:authorizesServiceSpecification rdf:type owl:ObjectProperty ;
-                                   rdfs:domain ucm:AuthorizationProcess ;
-                                   rdfs:range ucm:ServiceSpecification ;
-                                   rdfs:comment "Relates an occurrent to the specification describing the kind of activity under permission evaluation."@en ;
-                                   rdfs:label "authorizes service specification"@en .
-
-
-###  http://example.org/ucm#determinesEligibilityFor
-ucm:determinesEligibilityFor rdf:type owl:ObjectProperty ;
-                             rdfs:domain ucm:EligibilityDeterminationProcess ;
-                             rdfs:range owl:Thing ;
-                             rdfs:comment "Relates an occurrent to the governed context, activity, or specification against which qualification is evaluated."@en ;
-                             rdfs:label "determines eligibility for"@en .
-
-
-###  http://example.org/ucm#documentsProcess
-ucm:documentsProcess rdf:type owl:ObjectProperty ;
-                     rdfs:domain ucm:Report ;
-                     rdfs:range sulo:Process ;
-                     rdfs:comment "Relates a report to an occurrent it documents."@en ;
-                     rdfs:label "documents process"@en .
-
-
-###  http://example.org/ucm#enablesProcess
-ucm:enablesProcess rdf:type owl:ObjectProperty ;
-                   rdfs:domain ucm:AdministrativeProcess ;
-                   rdfs:range ucm:CareProcess ;
-                   rdfs:comment "Relates an occurrent that allows, governs, or permits another to occur."@en ;
-                   rdfs:label "enables process"@en .
-
-
-###  http://example.org/ucm#enrollsInProgram
-ucm:enrollsInProgram rdf:type owl:ObjectProperty ;
-                     rdfs:domain ucm:EnrollmentProcess ;
-                     rdfs:range ucm:Program ;
-                     rdfs:comment "Relates an occurrent to the governed context into which formal association is established."@en ;
-                     rdfs:label "enrolls in program"@en .
-
-
-###  http://example.org/ucm#governsProgram
-ucm:governsProgram rdf:type owl:ObjectProperty ;
-                   rdfs:domain ucm:AdministrativeProcess ;
-                   rdfs:range ucm:Program ;
-                   rdfs:comment "Relates an occurrent to the governed context within which it operates."@en ;
-                   rdfs:label "governs program"@en .
-
-
-###  http://example.org/ucm#hasAbatement
-ucm:hasAbatement rdf:type owl:ObjectProperty ;
-                 rdfs:domain ucm:Condition ;
-                 rdfs:range ucm:InformationalEntity ;
-                 rdfs:comment "Relates a condition to an information entity marking when it ended or became inactive."@en ;
-                 rdfs:label "has abatement"@en .
-
-
-###  http://example.org/ucm#hasAdministrativePrecondition
-ucm:hasAdministrativePrecondition rdf:type owl:ObjectProperty ;
-                                  rdfs:domain ucm:CareProcess ;
-                                  rdfs:range ucm:AdministrativeProcess ;
-                                  rdfs:comment "Relates an occurrent to another that must occur before it can proceed."@en ;
-                                  rdfs:label "has administrative precondition"@en .
-
-
-###  http://example.org/ucm#hasAllergyIntolerance
-ucm:hasAllergyIntolerance rdf:type owl:ObjectProperty ;
-                          rdfs:subPropertyOf ucm:hasCondition ;
-                          rdfs:domain ucm:Person ;
-                          rdfs:range ucm:AllergyIntolerance ;
-                          rdfs:comment "Relates a subject to a susceptibility for adverse response associated with exposure."@en ;
-                          rdfs:label "has allergy intolerance"@en .
-
-
-###  http://example.org/ucm#hasAuthorizationSubject
-ucm:hasAuthorizationSubject rdf:type owl:ObjectProperty ;
-                            rdfs:domain ucm:AuthorizationProcess ;
-                            rdfs:range ucm:PhysicalEntity ;
-                            rdfs:comment "Relates an occurrent to the entity for whom permission is being evaluated."@en ;
-                            rdfs:label "has authorization subject"@en .
-
-
-###  http://example.org/ucm#hasBasisInEligibility
-ucm:hasBasisInEligibility rdf:type owl:ObjectProperty ;
-                          rdfs:domain ucm:AdministrativeProcess ;
-                          rdfs:range owl:Thing ;
-                          rdfs:comment "Relates an occurrent to a prior qualification evaluation or qualification-bearing attribute on which it depends."@en ;
-                          rdfs:label "has basis in eligibility"@en .
-
-
-###  http://example.org/ucm#hasBeneficiary
-ucm:hasBeneficiary rdf:type owl:ObjectProperty ;
-                   rdfs:domain sulo:Process ;
-                   rdfs:range ucm:PhysicalEntity ;
-                   rdfs:comment "Relates an occurrent to an entity that receives intended benefit."@en ;
-                   rdfs:label "has beneficiary"@en .
-
-
-###  http://example.org/ucm#hasCausativeAgent
-ucm:hasCausativeAgent rdf:type owl:ObjectProperty ;
-                      rdfs:domain ucm:AllergyIntolerance ;
-                      rdfs:range ucm:SubstanceExposureAgent ;
-                      rdfs:comment "Relates a susceptibility for adverse response to the substance or product that may realize it."@en ;
-                      rdfs:label "has causative agent"@en .
-
-
-###  http://example.org/ucm#hasClinicalStatus
-ucm:hasClinicalStatus rdf:type owl:ObjectProperty ;
-                      rdfs:domain ucm:Condition ;
-                      rdfs:range ucm:ClinicalStatus ;
-                      rdfs:comment "Relates a condition to its current standing."@en ;
-                      rdfs:label "has clinical status"@en .
-
-
-###  http://example.org/ucm#hasCondition
-ucm:hasCondition rdf:type owl:ObjectProperty ;
-                 rdfs:domain ucm:Person ;
-                 rdfs:range ucm:Condition ;
-                 rdfs:comment "Relates a subject to a state, situation, or circumstance associated with it."@en ;
-                 rdfs:label "has condition"@en .
-
-
-###  http://example.org/ucm#hasDomain
-ucm:hasDomain rdf:type owl:ObjectProperty ;
-              rdfs:domain ucm:CareProcess ;
-              rdfs:range ucm:CareDomain ;
-              rdfs:comment "Relates an occurrent to the context in which it takes place."@en ;
-              rdfs:label "has domain"@en .
-
-
-###  http://example.org/ucm#hasEligibilityDisposition
-ucm:hasEligibilityDisposition rdf:type owl:ObjectProperty ;
-                              rdfs:domain ucm:PhysicalEntity ;
-                              rdfs:range ucm:EligibilityDisposition ;
-                              rdfs:comment "Relates an entity to a realizable property indicating qualification."@en ;
-                              rdfs:label "has eligibility disposition"@en .
-
-
-###  http://example.org/ucm#hasEligibilitySubject
-ucm:hasEligibilitySubject rdf:type owl:ObjectProperty ;
-                          rdfs:domain ucm:EligibilityDeterminationProcess ;
-                          rdfs:range ucm:PhysicalEntity ;
-                          rdfs:comment "Relates an occurrent to the entity whose qualification is being evaluated."@en ;
-                          rdfs:label "has eligibility subject"@en .
-
-
-###  http://example.org/ucm#hasEnrollmentSubject
-ucm:hasEnrollmentSubject rdf:type owl:ObjectProperty ;
-                         rdfs:domain ucm:EnrollmentProcess ;
-                         rdfs:range ucm:PhysicalEntity ;
-                         rdfs:comment "Relates an occurrent to the entity becoming formally associated with a governed context."@en ;
-                         rdfs:label "has enrollment subject"@en .
-
-
-###  http://example.org/ucm#hasFocus
-ucm:hasFocus rdf:type owl:ObjectProperty ;
-             rdfs:domain ucm:CareProcess ;
-             rdfs:range ucm:CareFocus ;
-             rdfs:comment "Relates an occurrent to the type of need, problem, or concern toward which it is directed."@en ;
-             rdfs:label "has focus"@en .
-
-
-###  http://example.org/ucm#hasInput
-ucm:hasInput rdf:type owl:ObjectProperty ;
-             rdfs:domain sulo:Process ;
-             rdfs:range sulo:Object ;
-             rdfs:comment "Relates an occurrent to something used or transformed during execution."@en ;
-             rdfs:label "has input"@en .
-
-
-###  http://example.org/ucm#hasInterventionType
-ucm:hasInterventionType rdf:type owl:ObjectProperty ;
-                        rdfs:domain ucm:CareProcess ;
-                        rdfs:range ucm:InterventionType ;
-                        rdfs:comment "Relates an occurrent to the manner in which actions are performed."@en ;
-                        rdfs:label "has intervention type"@en .
-
-
-###  http://example.org/ucm#hasManifestation
-ucm:hasManifestation rdf:type owl:ObjectProperty ;
-                     rdfs:domain ucm:InformationalEntity ;
-                     rdfs:range ucm:ReactionManifestation ;
-                     rdfs:comment "Relates reaction evidence to an observed sign or symptom."@en ;
-                     rdfs:label "has manifestation"@en .
-
-
-###  http://example.org/ucm#hasMember
-ucm:hasMember rdf:type owl:ObjectProperty ;
-              rdfs:domain ucm:Collection ;
-              rdfs:range owl:Thing ;
-              rdfs:comment "Relates a collection to an item it contains."@en ;
-              rdfs:label "has member"@en .
-
-
-###  http://example.org/ucm#hasOnset
-ucm:hasOnset rdf:type owl:ObjectProperty ;
-             rdfs:domain ucm:Condition ;
-             rdfs:range ucm:InformationalEntity ;
-             rdfs:comment "Relates a condition to an information entity marking when it began or was first recognized."@en ;
-             rdfs:label "has onset"@en .
-
-
-###  http://example.org/ucm#hasOutcome
-ucm:hasOutcome rdf:type owl:ObjectProperty ;
-               rdfs:domain sulo:Process ;
-               rdfs:range ucm:InformationalEntity ;
-               rdfs:comment "Relates an occurrent to a resulting state, result, or evaluative finding."@en ;
-               rdfs:label "has outcome"@en .
-
-
-###  http://example.org/ucm#hasOutput
-ucm:hasOutput rdf:type owl:ObjectProperty ;
-              rdfs:domain sulo:Process ;
-              rdfs:range sulo:Object ;
-              rdfs:comment "Relates an occurrent to something produced as a result."@en ;
-              rdfs:label "has output"@en .
-
-
-###  http://example.org/ucm#hasOutputStatement
-ucm:hasOutputStatement rdf:type owl:ObjectProperty ;
-                       rdfs:domain sulo:Process ;
-                       rdfs:range ucm:Statement ;
-                       rdfs:comment "Relates an occurrent to a statement generated as an output."@en ;
-                       rdfs:label "has output statement"@en .
-
-
-###  http://example.org/ucm#hasParticipant
-ucm:hasParticipant rdf:type owl:ObjectProperty ;
-                   rdfs:subPropertyOf sulo:hasParticipant ;
-                   rdfs:domain ucm:Participation ;
-                   rdfs:range ucm:PhysicalEntity ;
-                   rdfs:comment "Relates a participation record to an entity involved in an occurrent."@en ;
-                   rdfs:label "has participant"@en .
-
-
-###  http://example.org/ucm#hasPhase
-ucm:hasPhase rdf:type owl:ObjectProperty ;
-             rdfs:domain sulo:Process ;
-             rdfs:range sulo:Process ;
-             rdfs:comment "Relates an occurrent to a temporally bounded part contributing to its execution."@en ;
-             rdfs:label "has phase"@en .
-
-
-###  http://example.org/ucm#hasReactionEvent
-ucm:hasReactionEvent rdf:type owl:ObjectProperty ;
-                     rdfs:domain ucm:AllergyIntolerance ;
-                     rdfs:range ucm:AdverseReactionEvent ;
-                     rdfs:comment "Relates a susceptibility for adverse response to an occurrent that provides evidence of its realization."@en ;
-                     rdfs:label "has reaction event"@en .
-
-
-###  http://example.org/ucm#hasRole
-ucm:hasRole rdf:type owl:ObjectProperty ;
-            rdfs:domain ucm:Participation ;
-            rdfs:range ucm:ActorRole ;
-            rdfs:comment "Relates a participation record to the capacity in which involvement occurs."@en ;
-            rdfs:label "has role"@en .
-
-
-###  http://example.org/ucm#hasSeverity
-ucm:hasSeverity rdf:type owl:ObjectProperty ;
-                rdfs:domain sulo:Object ;
-                rdfs:range ucm:Severity ;
-                rdfs:comment "Relates a condition, statement, or reaction evidence to degree of seriousness."@en ;
-                rdfs:label "has severity"@en .
-
-
-###  http://example.org/ucm#hasStatement
-ucm:hasStatement rdf:type owl:ObjectProperty ;
-                 rdfs:domain ucm:Report ;
-                 rdfs:range ucm:Statement ;
-                 rdfs:comment "Relates a report to a statement it contains."@en ;
-                 rdfs:label "has statement"@en .
-
-
-###  http://example.org/ucm#hasTrigger
-ucm:hasTrigger rdf:type owl:ObjectProperty ;
-               rdfs:domain sulo:Process ;
-               rdfs:range sulo:Process ;
-               rdfs:comment "Relates an occurrent to another occurrent that initiates it."@en ;
-               rdfs:label "has trigger"@en .
-
-
-###  http://example.org/ucm#hasUnit
-ucm:hasUnit rdf:type owl:ObjectProperty ;
-            rdfs:domain ucm:ObservationStatement ;
-            rdfs:range ucm:InformationalEntity ;
-            rdfs:comment "Relates a statement to a unit of measure."@en ;
-            rdfs:label "has unit"@en .
-
-
-###  http://example.org/ucm#hasValue
-ucm:hasValue rdf:type owl:ObjectProperty ;
-             rdfs:domain ucm:ObservationStatement ;
-             rdfs:range ucm:InformationalEntity ;
-             rdfs:comment "Relates an observation statement to the informational value it conveys."@en ;
-             rdfs:label "has value"@en .
-
-
-###  http://example.org/ucm#hasVerificationStatus
-ucm:hasVerificationStatus rdf:type owl:ObjectProperty ;
-                          rdfs:domain ucm:Condition ;
-                          rdfs:range ucm:VerificationStatus ;
-                          rdfs:comment "Relates a condition to its degree of confirmation."@en ;
-                          rdfs:label "has verification status"@en .
-
-
-###  http://example.org/ucm#inProcess
-ucm:inProcess rdf:type owl:ObjectProperty ;
-              rdfs:domain ucm:Participation ;
-              rdfs:range sulo:Process ;
-              rdfs:comment "Relates a participation record to the occurrent in which involvement occurs."@en ;
-              rdfs:label "in process"@en .
-
-
-###  http://example.org/ucm#instanceOfFocus
-ucm:instanceOfFocus rdf:type owl:ObjectProperty ;
-                    rdfs:domain ucm:Condition ;
-                    rdfs:range ucm:CareFocus ;
-                    rdfs:comment "Relates a condition to the classification it exemplifies."@en ;
-                    rdfs:label "instance of focus"@en .
-
-
-###  http://example.org/ucm#isEnrolledIn
-ucm:isEnrolledIn rdf:type owl:ObjectProperty ;
-                 rdfs:domain ucm:PhysicalEntity ;
-                 rdfs:range ucm:Program ;
-                 rdfs:comment "Relates an entity to a governed context with which it is formally associated."@en ;
-                 rdfs:label "is enrolled in"@en .
-
-
-###  http://example.org/ucm#paysFor
-ucm:paysFor rdf:type owl:ObjectProperty ;
-            rdfs:domain ucm:PaymentProcess ;
-            rdfs:range ucm:CareProcess ;
-            rdfs:comment "Relates an occurrent involving financial transfer to an activity for which value is transferred."@en ;
-            rdfs:label "pays for"@en .
-
-
-###  http://example.org/ucm#precedesAdministrativeProcess
-ucm:precedesAdministrativeProcess rdf:type owl:ObjectProperty ;
-                                  rdfs:domain ucm:AdministrativeProcess ;
-                                  rdfs:range ucm:AdministrativeProcess ;
-                                  rdfs:comment "Relates one governing occurrent to another that typically follows it in a workflow."@en ;
-                                  rdfs:label "precedes administrative process"@en .
-
-
-###  http://example.org/ucm#producesStatement
-ucm:producesStatement rdf:type owl:ObjectProperty ;
-                      rdfs:domain ucm:ObservationProcess ;
-                      rdfs:range ucm:ObservationStatement ;
-                      rdfs:comment "Relates an observation process to the statement it produces."@en ;
-                      rdfs:label "produces statement"@en .
-
-
-###  http://example.org/ucm#providesResource
-ucm:providesResource rdf:type owl:ObjectProperty ;
-                     rdfs:domain sulo:Process ;
-                     rdfs:range ucm:PhysicalEntity ;
-                     rdfs:comment "Relates an occurrent to something made available or delivered."@en ;
-                     rdfs:label "provides resource"@en .
-
-
-###  http://example.org/ucm#realizesDisposition
-ucm:realizesDisposition rdf:type owl:ObjectProperty ;
-                        rdfs:domain sulo:Process ;
-                        rdfs:range ucm:DispositionalCondition ;
-                        rdfs:comment "Relates an occurrent to a susceptibility that becomes manifest through it."@en ;
-                        rdfs:label "realizes disposition"@en .
-
-
-###  http://example.org/ucm#realizesPlan
-ucm:realizesPlan rdf:type owl:ObjectProperty ;
-                 rdfs:domain sulo:Process ;
-                 rdfs:range ucm:CarePlan ;
-                 rdfs:comment "Relates an occurrent to an information entity describing intended actions it carries out."@en ;
-                 rdfs:label "realizes plan"@en .
-
-
-###  http://example.org/ucm#resultsInAuthorizationDecision
-ucm:resultsInAuthorizationDecision rdf:type owl:ObjectProperty ;
-                                   rdfs:domain ucm:AuthorizationProcess ;
-                                   rdfs:range ucm:AuthorizationDecision ;
-                                   rdfs:comment "Relates an occurrent to the information entity recording the outcome of a permission evaluation."@en ;
-                                   rdfs:label "results in authorization decision"@en .
-
-
-###  http://example.org/ucm#resultsInEligibilityDisposition
-ucm:resultsInEligibilityDisposition rdf:type owl:ObjectProperty ;
-                                    rdfs:domain ucm:EligibilityDeterminationProcess ;
-                                    rdfs:range ucm:EligibilityDisposition ;
-                                    rdfs:comment "Relates an occurrent to the realizable property it establishes or confirms."@en ;
-                                    rdfs:label "results in eligibility disposition"@en .
-
-
-###  http://example.org/ucm#resultsInEnrollmentStatus
-ucm:resultsInEnrollmentStatus rdf:type owl:ObjectProperty ;
-                              rdfs:domain ucm:EnrollmentProcess ;
-                              rdfs:range ucm:EnrollmentStatus ;
-                              rdfs:comment "Relates an occurrent to the information entity recording formal association."@en ;
-                              rdfs:label "results in enrollment status"@en .
-
-
-###  http://example.org/ucm#targetsFocus
-ucm:targetsFocus rdf:type owl:ObjectProperty ;
-                 rdfs:domain ucm:CareProcess ;
-                 rdfs:range ucm:CareFocus ;
-                 rdfs:comment "Relates an occurrent to the classification of concern toward which it is directed."@en ;
-                 rdfs:label "targets focus"@en .
-
-
-###  http://example.org/ucm#usesMaterial
-ucm:usesMaterial rdf:type owl:ObjectProperty ;
-                 rdfs:domain ucm:CareProcess ;
-                 rdfs:range ucm:Material ;
-                 rdfs:comment "Relates an occurrent to a physical entity employed during execution."@en ;
-                 rdfs:label "uses material"@en .
+@prefix ucm:  <http://example.org/ucm#> .
+@prefix role: <http://example.org/role#> .
+@prefix bfo:  <http://purl.obolibrary.org/obo/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
 
 #################################################################
-#    Classes
+# EXPLICIT ALIGNMENT ANNOTATIONS
 #################################################################
 
-###  http://example.org/role#BeneficiaryRole
-role:BeneficiaryRole rdf:type owl:Class ;
-                     rdfs:subClassOf ucm:ActorRole ;
-                     rdfs:comment "A capacity associated with receiving intended benefit."@en ;
-                     rdfs:label "beneficiary role"@en .
-
-
-###  http://example.org/sulo#Collection
-sulo:Collection rdf:type owl:Class .
-
-
-###  http://example.org/sulo#InformationObject
-sulo:InformationObject rdf:type owl:Class .
-
-
-###  http://example.org/sulo#Object
-sulo:Object rdf:type owl:Class .
-
-
-###  http://example.org/sulo#Process
-sulo:Process rdf:type owl:Class .
-
-
-###  http://example.org/sulo#SpatialObject
-sulo:SpatialObject rdf:type owl:Class .
-
-
-###  http://example.org/ucm#ActorRole
-ucm:ActorRole rdf:type owl:Class ;
-              rdfs:subClassOf bfo:BFO_0000023 ;
-              rdfs:comment "A realizable entity specifying a capacity assumed by an entity in a context."@en ;
-              rdfs:label "actor role"@en .
-
-
-###  http://example.org/ucm#AdjudicationProcess
-ucm:AdjudicationProcess rdf:type owl:Class ;
-                        rdfs:subClassOf ucm:AdministrativeProcess ;
-                        rdfs:comment "An occurrent in which submitted claims or requests are evaluated and resolved according to governing rules."@en ;
-                        rdfs:label "adjudication process"@en .
-
-
-###  http://example.org/ucm#AdministrativeProcess
-ucm:AdministrativeProcess rdf:type owl:Class ;
-                          rdfs:subClassOf sulo:Process ,
-                                          bfo:BFO_0000015 ;
-                          rdfs:comment "An occurrent in which activities govern, evaluate, enable, authorize, record, or account for other activities without directly altering a subject’s condition."@en ;
-                          rdfs:label "administrative process"@en .
-
-
-###  http://example.org/ucm#AdverseReactionEvent
-ucm:AdverseReactionEvent rdf:type owl:Class ;
-                         rdfs:subClassOf sulo:Process ,
-                                         bfo:BFO_0000015 ;
-                         rdfs:comment "An occurrent in which exposure results in an adverse response."@en ;
-                         rdfs:label "adverse reaction event"@en .
-
-
-###  http://example.org/ucm#AllergyIntolerance
-ucm:AllergyIntolerance rdf:type owl:Class ;
-                       rdfs:subClassOf ucm:DispositionalCondition ,
-                                       ucm:HealthCondition ,
-                                       [ rdf:type owl:Restriction ;
-                                         owl:onProperty ucm:hasCausativeAgent ;
-                                         owl:someValuesFrom ucm:SubstanceExposureAgent
-                                       ] ;
-                       rdfs:comment "A dispositional condition involving risk of adverse response upon exposure to a substance, product, or class."@en ;
-                       rdfs:label "allergy intolerance"@en .
-
-
-###  http://example.org/ucm#AssessmentProcess
-ucm:AssessmentProcess rdf:type owl:Class ;
-                      rdfs:subClassOf ucm:ObservationProcess ;
-                      rdfs:comment "An observation process in which a qualitative or interpretive result is determined."@en ;
-                      rdfs:label "assessment process"@en .
-
-
-###  http://example.org/ucm#AssignmentProcess
-ucm:AssignmentProcess rdf:type owl:Class ;
-                      rdfs:subClassOf ucm:CareProcess ,
-                                      [ rdf:type owl:Restriction ;
-                                        owl:onProperty ucm:assignsEntity ;
-                                        owl:someValuesFrom ucm:PhysicalEntity
-                                      ] ;
-                      owl:disjointWith ucm:ProvisioningProcess ;
-                      rdfs:comment "An occurrent in which an entity is designated or allocated within a context."@en ;
-                      rdfs:label "assignment process"@en .
-
-
-###  http://example.org/ucm#Attribute
-ucm:Attribute rdf:type owl:Class ;
-              rdfs:subClassOf bfo:BFO_0000002 ;
-              rdfs:comment "A dependent entity such as a role, disposition, or status borne by another entity."@en ;
-              rdfs:label "attribute"@en .
-
-
-###  http://example.org/ucm#AuthorizationDecision
-ucm:AuthorizationDecision rdf:type owl:Class ;
-                          rdfs:subClassOf ucm:InformationalEntity ;
-                          rdfs:comment "An information entity representing the outcome of a permission evaluation."@en ;
-                          rdfs:label "authorization decision"@en .
-
-
-###  http://example.org/ucm#AuthorizationProcess
-ucm:AuthorizationProcess rdf:type owl:Class ;
-                         rdfs:subClassOf ucm:AdministrativeProcess ,
-                                         [ rdf:type owl:Restriction ;
-                                           owl:onProperty ucm:hasAuthorizationSubject ;
-                                           owl:someValuesFrom ucm:PhysicalEntity
-                                         ] ,
-                                         [ rdf:type owl:Restriction ;
-                                           owl:onProperty ucm:resultsInAuthorizationDecision ;
-                                           owl:someValuesFrom ucm:AuthorizationDecision
-                                         ] ;
-                         owl:disjointWith ucm:EligibilityDeterminationProcess ,
-                                          ucm:EnrollmentProcess ;
-                         rdfs:comment "An occurrent in which permission is granted, denied, or constrained for a specific activity."@en ;
-                         rdfs:label "authorization process"@en .
-
-
-###  http://example.org/ucm#BehavioralCondition
-ucm:BehavioralCondition rdf:type owl:Class ;
-                        rdfs:subClassOf ucm:Condition ;
-                        rdfs:comment "A condition related to behavior, mental processes, or substance use."@en ;
-                        rdfs:label "behavioral condition"@en .
-
-
-###  http://example.org/ucm#BehavioralFocus
-ucm:BehavioralFocus rdf:type owl:Class ;
-                    rdfs:subClassOf ucm:CareFocus ;
-                    rdfs:comment "A classification for concerns related to mental, emotional, or behavioral functioning."@en ;
-                    rdfs:label "behavioral focus"@en .
-
-
-###  http://example.org/ucm#CareCoordination
-ucm:CareCoordination rdf:type owl:Class ;
-                     rdfs:subClassOf ucm:InterventionType ;
-                     rdfs:comment "A classification for approaches involving organization and alignment of multiple activities or actors."@en ;
-                     rdfs:label "care coordination"@en .
-
-
-###  http://example.org/ucm#CareDomain
-ucm:CareDomain rdf:type owl:Class ;
-               rdfs:subClassOf ucm:InformationalEntity ;
-               rdfs:comment "A classification indicating the institutional or organizational context in which activities occur."@en ;
-               rdfs:label "care domain"@en .
-
-
-###  http://example.org/ucm#CareFocus
-ucm:CareFocus rdf:type owl:Class ;
-              rdfs:subClassOf ucm:InformationalEntity ;
-              rdfs:comment "A classification describing the type of need, problem, concern, or situation toward which activity is directed."@en ;
-              rdfs:label "care focus"@en .
-
-
-###  http://example.org/ucm#CarePlan
-ucm:CarePlan rdf:type owl:Class ;
-             rdfs:subClassOf ucm:InformationalEntity ;
-             rdfs:comment "An information entity describing intended actions, goals, or arrangements."@en ;
-             rdfs:label "care plan"@en .
-
-
-###  http://example.org/ucm#CareProcess
-ucm:CareProcess rdf:type owl:Class ;
-                rdfs:subClassOf sulo:Process ,
-                                bfo:BFO_0000015 ;
-                rdfs:comment "An occurrent in which actions are performed that directly influence the condition, functioning, or well-being of a subject."@en ;
-                rdfs:label "care process"@en .
-
-
-###  http://example.org/ucm#ClinicalCare
-ucm:ClinicalCare rdf:type owl:Class ;
-                 rdfs:subClassOf ucm:CareDomain ;
-                 rdfs:comment "A context involving diagnosis, treatment, or management of physiological or pathological situations."@en ;
-                 rdfs:label "clinical care"@en .
-
-
-###  http://example.org/ucm#ClinicalStatement
-ucm:ClinicalStatement rdf:type owl:Class ;
-                      rdfs:subClassOf ucm:Statement ;
-                      rdfs:comment "A statement recording a clinically relevant situation."@en ;
-                      rdfs:label "clinical statement"@en .
-
-
-###  http://example.org/ucm#ClinicalStatus
-ucm:ClinicalStatus rdf:type owl:Class ;
-                   rdfs:subClassOf ucm:InformationalEntity ;
-                   rdfs:comment "An information entity representing current standing."@en ;
-                   rdfs:label "clinical status"@en .
-
-
-###  http://example.org/ucm#Collection
-ucm:Collection rdf:type owl:Class ;
-               rdfs:subClassOf sulo:Collection ;
-               rdfs:comment "An information entity consisting of zero or more members."@en ;
-               rdfs:label "collection"@en .
-
-
-###  http://example.org/ucm#Condition
-ucm:Condition rdf:type owl:Class ;
-              rdfs:subClassOf sulo:Object ;
-              rdfs:comment "A state, situation, or circumstance associated with a subject that may be relevant for intervention, evaluation, or care."@en ;
-              rdfs:label "condition"@en .
-
-
-###  http://example.org/ucm#Counseling
-ucm:Counseling rdf:type owl:Class ;
-               rdfs:subClassOf ucm:InterventionType ;
-               rdfs:comment "A classification for approaches involving guidance or communication intended to influence understanding or behavior."@en ;
-               rdfs:label "counseling"@en .
-
-
-###  http://example.org/ucm#DispositionalCondition
-ucm:DispositionalCondition rdf:type owl:Class ;
-                           rdfs:subClassOf ucm:Condition ,
-                                           bfo:BFO_0000016 ;
-                           rdfs:comment "A condition consisting in a tendency, susceptibility, or risk that may be realized under certain circumstances."@en ;
-                           rdfs:label "dispositional condition"@en .
-
-
-###  http://example.org/ucm#EligibilityDeterminationProcess
-ucm:EligibilityDeterminationProcess rdf:type owl:Class ;
-                                    rdfs:subClassOf ucm:AdministrativeProcess ,
-                                                    [ rdf:type owl:Restriction ;
-                                                      owl:onProperty ucm:determinesEligibilityFor ;
-                                                      owl:someValuesFrom owl:Thing
-                                                    ] ,
-                                                    [ rdf:type owl:Restriction ;
-                                                      owl:onProperty ucm:hasEligibilitySubject ;
-                                                      owl:someValuesFrom ucm:PhysicalEntity
-                                                    ] ;
-                                    owl:disjointWith ucm:EnrollmentProcess ;
-                                    rdfs:comment "An occurrent in which qualification is evaluated against defined criteria."@en ;
-                                    rdfs:label "eligibility determination process"@en .
-
-
-###  http://example.org/ucm#EligibilityDisposition
-ucm:EligibilityDisposition rdf:type owl:Class ;
-                           rdfs:subClassOf bfo:BFO_0000016 ;
-                           rdfs:comment "A realizable property indicating qualification under defined conditions."@en ;
-                           rdfs:label "eligibility disposition"@en .
-
-
-###  http://example.org/ucm#EnrollmentProcess
-ucm:EnrollmentProcess rdf:type owl:Class ;
-                      rdfs:subClassOf ucm:AdministrativeProcess ,
-                                      [ rdf:type owl:Restriction ;
-                                        owl:onProperty ucm:enrollsInProgram ;
-                                        owl:someValuesFrom ucm:Program
-                                      ] ,
-                                      [ rdf:type owl:Restriction ;
-                                        owl:onProperty ucm:hasEnrollmentSubject ;
-                                        owl:someValuesFrom ucm:PhysicalEntity
-                                      ] ;
-                      rdfs:comment "An occurrent in which an entity becomes formally associated with a governed context."@en ;
-                      rdfs:label "enrollment process"@en .
-
-
-###  http://example.org/ucm#EnrollmentStatus
-ucm:EnrollmentStatus rdf:type owl:Class ;
-                     rdfs:subClassOf ucm:InformationalEntity ;
-                     rdfs:comment "An information entity representing formal association with a governed context."@en ;
-                     rdfs:label "enrollment status"@en .
-
-
-###  http://example.org/ucm#HealthCondition
-ucm:HealthCondition rdf:type owl:Class ;
-                    rdfs:subClassOf ucm:Condition ;
-                    rdfs:comment "A condition related to physiological or pathological functioning."@en ;
-                    rdfs:label "health condition"@en .
-
-
-###  http://example.org/ucm#HealthFocus
-ucm:HealthFocus rdf:type owl:Class ;
-                rdfs:subClassOf ucm:CareFocus ;
-                rdfs:comment "A classification for concerns related to physiological or pathological functioning."@en ;
-                rdfs:label "health focus"@en .
-
-
-###  http://example.org/ucm#HousingAssignmentProcess
-ucm:HousingAssignmentProcess rdf:type owl:Class ;
-                             rdfs:subClassOf ucm:ResourceAssignmentProcess ,
-                                             [ rdf:type owl:Restriction ;
-                                               owl:onProperty ucm:assignsResource ;
-                                               owl:someValuesFrom ucm:HousingUnit
-                                             ] ;
-                             rdfs:comment "An occurrent in which a person is designated to occupy or use a dwelling."@en ;
-                             rdfs:label "housing assignment process"@en .
-
-
-###  http://example.org/ucm#HousingInstability
-ucm:HousingInstability rdf:type owl:Class ;
-                       rdfs:subClassOf ucm:SocialNeed ;
-                       rdfs:comment "A classification for circumstances in which stable or adequate shelter is lacking or uncertain."@en ;
-                       rdfs:label "housing instability"@en .
-
-
-###  http://example.org/ucm#HousingProvisioningProcess
-ucm:HousingProvisioningProcess rdf:type owl:Class ;
-                               rdfs:subClassOf ucm:ProvisioningProcess ,
-                                               [ rdf:type owl:Restriction ;
-                                                 owl:onProperty ucm:providesResource ;
-                                                 owl:someValuesFrom ucm:HousingUnit
-                                               ] ;
-                               rdfs:comment "An occurrent in which a dwelling is made available to a recipient."@en ;
-                               rdfs:label "housing provisioning process"@en .
-
-
-###  http://example.org/ucm#HousingUnit
-ucm:HousingUnit rdf:type owl:Class ;
-                rdfs:subClassOf ucm:Material ;
-                rdfs:comment "A physical structure that may serve as a dwelling."@en ;
-                rdfs:label "housing unit"@en .
-
-
-###  http://example.org/ucm#InformationalEntity
-ucm:InformationalEntity rdf:type owl:Class ;
-                        rdfs:subClassOf sulo:InformationObject ,
-                                        bfo:BFO_0000031 ;
-                        rdfs:comment "An entity that conveys, records, classifies, or organizes content."@en ;
-                        rdfs:label "informational entity"@en .
-
-
-###  http://example.org/ucm#InterventionType
-ucm:InterventionType rdf:type owl:Class ;
-                     rdfs:subClassOf ucm:InformationalEntity ;
-                     rdfs:comment "A classification describing the manner in which actions are carried out."@en ;
-                     rdfs:label "intervention type"@en .
-
-
-###  http://example.org/ucm#Material
-ucm:Material rdf:type owl:Class ;
-             rdfs:subClassOf ucm:PhysicalEntity ;
-             rdfs:comment "A physical entity that may be used, delivered, consumed, allocated, or observed."@en ;
-             rdfs:label "material"@en .
-
-
-###  http://example.org/ucm#MeasurementProcess
-ucm:MeasurementProcess rdf:type owl:Class ;
-                       rdfs:subClassOf ucm:ObservationProcess ;
-                       rdfs:comment "An observation process in which a quantitative result is determined."@en ;
-                       rdfs:label "measurement process"@en .
-
-
-###  http://example.org/ucm#ObservationProcess
-ucm:ObservationProcess rdf:type owl:Class ;
-                       rdfs:subClassOf sulo:Process ,
-                                       bfo:BFO_0000015 ;
-                       rdfs:comment "An occurrent in which information about an entity, attribute, or process is obtained or determined."@en ;
-                       rdfs:label "observation process"@en .
-
-
-###  http://example.org/ucm#ObservationStatement
-ucm:ObservationStatement rdf:type owl:Class ;
-                         rdfs:subClassOf ucm:Statement ;
-                         rdfs:comment "A statement representing the result of an observation process."@en ;
-                         rdfs:label "observation statement"@en .
-
-
-###  http://example.org/ucm#Participation
-ucm:Participation rdf:type owl:Class ;
-                  rdfs:subClassOf ucm:InformationalEntity ;
-                  rdfs:comment "An information entity representing involvement of an entity in an occurrent together with contextual details."@en ;
-                  rdfs:label "participation"@en .
-
-
-###  http://example.org/ucm#PayerRole
-ucm:PayerRole rdf:type owl:Class ;
-              rdfs:subClassOf ucm:ActorRole ;
-              rdfs:comment "A capacity associated with financing activities."@en ;
-              rdfs:label "payer role"@en .
-
-
-###  http://example.org/ucm#PaymentProcess
-ucm:PaymentProcess rdf:type owl:Class ;
-                   rdfs:subClassOf ucm:AdministrativeProcess ;
-                   rdfs:comment "An occurrent in which financial value is transferred in relation to activities."@en ;
-                   rdfs:label "payment process"@en .
-
-
-###  http://example.org/ucm#Person
-ucm:Person rdf:type owl:Class ;
-           rdfs:subClassOf ucm:PhysicalEntity ;
-           rdfs:comment "A human being that may bear roles, attributes, and conditions and may participate in occurrents."@en ;
-           rdfs:label "person"@en .
-
-
-###  http://example.org/ucm#PhysicalEntity
-ucm:PhysicalEntity rdf:type owl:Class ;
-                   rdfs:subClassOf sulo:SpatialObject ,
-                                   bfo:BFO_0000040 ;
-                   rdfs:comment "A physical thing that occupies space and persists through time."@en ;
-                   rdfs:label "physical entity"@en .
-
-
-###  http://example.org/ucm#Procedure
-ucm:Procedure rdf:type owl:Class ;
-              rdfs:subClassOf ucm:CareProcess ,
-                              [ rdf:type owl:Restriction ;
-                                owl:onProperty ucm:addressesCondition ;
-                                owl:someValuesFrom ucm:Condition
-                              ] ;
-              rdfs:comment "An occurrent in which diagnostic, therapeutic, preventive, or otherwise clinically relevant actions are performed."@en ;
-              rdfs:label "procedure"@en .
-
-
-###  http://example.org/ucm#Program
-ucm:Program rdf:type owl:Class ;
-            rdfs:subClassOf ucm:InformationalEntity ;
-            rdfs:comment "An organized set of rules, services, and resources under a governing framework."@en ;
-            rdfs:label "program"@en .
-
-
-###  http://example.org/ucm#ProviderRole
-ucm:ProviderRole rdf:type owl:Class ;
-                 rdfs:subClassOf ucm:ActorRole ;
-                 rdfs:comment "A capacity associated with performing actions."@en ;
-                 rdfs:label "provider role"@en .
-
-
-###  http://example.org/ucm#Provision
-ucm:Provision rdf:type owl:Class ;
-              rdfs:subClassOf ucm:InterventionType ;
-              rdfs:comment "A classification for approaches involving making goods or services available."@en ;
-              rdfs:label "provision"@en .
-
-
-###  http://example.org/ucm#ProvisioningProcess
-ucm:ProvisioningProcess rdf:type owl:Class ;
-                        rdfs:subClassOf ucm:CareProcess ,
-                                        [ rdf:type owl:Restriction ;
-                                          owl:onProperty ucm:hasBeneficiary ;
-                                          owl:someValuesFrom ucm:PhysicalEntity
-                                        ] ,
-                                        [ rdf:type owl:Restriction ;
-                                          owl:onProperty ucm:providesResource ;
-                                          owl:someValuesFrom ucm:PhysicalEntity
-                                        ] ;
-                        rdfs:comment "An occurrent in which something is made available to a recipient."@en ;
-                        rdfs:label "provisioning process"@en .
-
-
-###  http://example.org/ucm#PublicHealthCare
-ucm:PublicHealthCare rdf:type owl:Class ;
-                     rdfs:subClassOf ucm:CareDomain ;
-                     rdfs:comment "A context involving population-level prevention, surveillance, or health promotion."@en ;
-                     rdfs:label "public health care"@en .
-
-
-###  http://example.org/ucm#ReactionManifestation
-ucm:ReactionManifestation rdf:type owl:Class ;
-                          rdfs:subClassOf ucm:InformationalEntity ;
-                          rdfs:comment "An information entity representing an observed sign or symptom of adverse response."@en ;
-                          rdfs:label "reaction manifestation"@en .
-
-
-###  http://example.org/ucm#Report
-ucm:Report rdf:type owl:Class ;
-           rdfs:subClassOf ucm:Collection ,
-                           ucm:InformationalEntity ,
-                           [ rdf:type owl:Restriction ;
-                             owl:onProperty ucm:hasStatement ;
-                             owl:allValuesFrom ucm:Statement
-                           ] ;
-           rdfs:comment "An information entity composed of multiple organized statements for communication or record-keeping."@en ;
-           rdfs:label "report"@en .
-
-
-###  http://example.org/ucm#RequesterRole
-ucm:RequesterRole rdf:type owl:Class ;
-                  rdfs:subClassOf ucm:ActorRole ;
-                  rdfs:comment "A capacity associated with initiating actions."@en ;
-                  rdfs:label "requester role"@en .
-
-
-###  http://example.org/ucm#ResourceAssignmentProcess
-ucm:ResourceAssignmentProcess rdf:type owl:Class ;
-                              rdfs:subClassOf ucm:AssignmentProcess ,
-                                              [ rdf:type owl:Restriction ;
-                                                owl:onProperty ucm:assignsResource ;
-                                                owl:someValuesFrom ucm:PhysicalEntity
-                                              ] ;
-                              rdfs:comment "An occurrent in which an entity is allocated to a resource to use or occupy."@en ;
-                              rdfs:label "resource assignment process"@en .
-
-
-###  http://example.org/ucm#RoleAssignmentProcess
-ucm:RoleAssignmentProcess rdf:type owl:Class ;
-                          rdfs:subClassOf ucm:AssignmentProcess ,
-                                          [ rdf:type owl:Restriction ;
-                                            owl:onProperty ucm:assignsRole ;
-                                            owl:someValuesFrom ucm:ActorRole
-                                          ] ;
-                          rdfs:comment "An occurrent in which an entity is designated to bear a role."@en ;
-                          rdfs:label "role assignment process"@en .
-
-
-###  http://example.org/ucm#ServiceSpecification
-ucm:ServiceSpecification rdf:type owl:Class ;
-                         rdfs:subClassOf ucm:InformationalEntity ;
-                         rdfs:comment "An information entity describing a type of activity that may be requested, approved, or carried out."@en ;
-                         rdfs:label "service specification"@en .
-
-
-###  http://example.org/ucm#Severity
-ucm:Severity rdf:type owl:Class ;
-             rdfs:subClassOf ucm:InformationalEntity ;
-             rdfs:comment "An information entity representing degree of seriousness or intensity."@en ;
-             rdfs:label "severity"@en .
-
-
-###  http://example.org/ucm#SocialCare
-ucm:SocialCare rdf:type owl:Class ;
-               rdfs:subClassOf ucm:CareDomain ;
-               rdfs:comment "A context involving response to social or environmental circumstances affecting well-being."@en ;
-               rdfs:label "social care"@en .
-
-
-###  http://example.org/ucm#SocialCondition
-ucm:SocialCondition rdf:type owl:Class ;
-                    rdfs:subClassOf ucm:Condition ;
-                    rdfs:comment "A condition arising from social or environmental circumstances."@en ;
-                    rdfs:label "social condition"@en .
-
-
-###  http://example.org/ucm#SocialNeed
-ucm:SocialNeed rdf:type owl:Class ;
-               rdfs:subClassOf ucm:CareFocus ;
-               rdfs:comment "A classification for concerns arising from social or environmental circumstances."@en ;
-               rdfs:label "social need"@en .
-
-
-###  http://example.org/ucm#Statement
-ucm:Statement rdf:type owl:Class ;
-              rdfs:subClassOf ucm:InformationalEntity ;
-              rdfs:comment "An information entity asserting or recording something about an entity, attribute, or occurrent."@en ;
-              rdfs:label "statement"@en .
-
-
-###  http://example.org/ucm#SubstanceExposureAgent
-ucm:SubstanceExposureAgent rdf:type owl:Class ;
-                           rdfs:subClassOf ucm:Material ;
-                           rdfs:comment "A physical substance or product whose presence may trigger an adverse response."@en ;
-                           rdfs:label "substance exposure agent"@en .
-
-
-###  http://example.org/ucm#VerificationStatus
-ucm:VerificationStatus rdf:type owl:Class ;
-                       rdfs:subClassOf ucm:InformationalEntity ;
-                       rdfs:comment "An information entity representing degree of confirmation."@en ;
-                       rdfs:label "verification status"@en .
-
-
-###  http://purl.obolibrary.org/obo/BFO_0000002
-bfo:BFO_0000002 rdf:type owl:Class .
-
-
-###  http://purl.obolibrary.org/obo/BFO_0000015
-bfo:BFO_0000015 rdf:type owl:Class .
-
-
-###  http://purl.obolibrary.org/obo/BFO_0000016
-bfo:BFO_0000016 rdf:type owl:Class .
-
-
-###  http://purl.obolibrary.org/obo/BFO_0000023
-bfo:BFO_0000023 rdf:type owl:Class .
-
-
-###  http://purl.obolibrary.org/obo/BFO_0000031
-bfo:BFO_0000031 rdf:type owl:Class .
-
-
-###  http://purl.obolibrary.org/obo/BFO_0000040
-bfo:BFO_0000040 rdf:type owl:Class .
-
-
-###  Generated by the OWL API (version 4.5.29.2024-05-13T12:11:03Z) https://github.com/owlcs/owlapi
+ucm:hasBFOAlignment a owl:AnnotationProperty ;
+    rdfs:label "has BFO alignment"@en ;
+    rdfs:comment "Documents the BFO class or property used for ontological grounding."@en .
+
+ucm:hasSULOAlignment a owl:AnnotationProperty ;
+    rdfs:label "has SULO alignment"@en ;
+    rdfs:comment "Documents the SULO class or property used for semantic organization and reuse."@en .
+
+ucm:alignmentSemantics a owl:AnnotationProperty ;
+    rdfs:label "alignment semantics"@en ;
+    rdfs:comment "Documents how an external alignment should be interpreted within the layered architecture of the UCM."@en .
+
+#################################################################
+# HIGH-LEVEL ALIGNMENT
+#################################################################
+
+ucm:PhysicalEntity a owl:Class ;
+    rdfs:label "physical entity"@en ;
+    rdfs:comment "A physical thing that occupies space and persists through time. BFO alignment provides ontological grounding as a material entity, while SULO alignment provides a reusable semantic category for spatially extended things."@en ;
+    rdfs:subClassOf bfo:BFO_0000040 ;
+    rdfs:subClassOf sulo:SpatialObject ;
+    ucm:hasBFOAlignment bfo:BFO_0000040 ;
+    ucm:hasSULOAlignment sulo:SpatialObject ;
+    ucm:alignmentSemantics "BFO grounding is ontological; SULO alignment is semantic-organizational."@en .
+
+ucm:InformationalEntity a owl:Class ;
+    rdfs:label "informational entity"@en ;
+    rdfs:comment "An entity that conveys, records, classifies, or organizes content. BFO alignment grounds it as a generically dependent continuant, while SULO alignment places it in a practical information-object layer used throughout the UCM."@en ;
+    rdfs:subClassOf bfo:BFO_0000031 ;
+    rdfs:subClassOf sulo:InformationObject ;
+    ucm:hasBFOAlignment bfo:BFO_0000031 ;
+    ucm:hasSULOAlignment sulo:InformationObject ;
+    ucm:alignmentSemantics "BFO grounding is ontological; SULO alignment is semantic-organizational."@en .
+
+ucm:Attribute a owl:Class ;
+    rdfs:label "attribute"@en ;
+    rdfs:comment "A dependent entity such as a role, disposition, or status borne by another entity."@en ;
+    rdfs:subClassOf bfo:BFO_0000002 ;
+    ucm:hasBFOAlignment bfo:BFO_0000002 ;
+    ucm:alignmentSemantics "Grounded directly to BFO because this layer expresses ontological dependence rather than an additional SULO categorization."@en .
+
+#################################################################
+# CORE PROCESS HIERARCHY
+#################################################################
+
+ucm:CareProcess a owl:Class ;
+    rdfs:label "care process"@en ;
+    rdfs:comment "An occurrent in which actions are performed that directly influence the condition, functioning, or well-being of a subject. BFO alignment grounds it as a processual entity, while SULO alignment situates it in a reusable process hierarchy."@en ;
+    rdfs:subClassOf bfo:BFO_0000015 ;
+    rdfs:subClassOf sulo:Process ;
+    ucm:hasBFOAlignment bfo:BFO_0000015 ;
+    ucm:hasSULOAlignment sulo:Process ;
+    ucm:alignmentSemantics "BFO grounding is ontological; SULO alignment is semantic-organizational."@en .
+
+ucm:AdministrativeProcess a owl:Class ;
+    rdfs:label "administrative process"@en ;
+    rdfs:comment "An occurrent in which activities govern, evaluate, enable, authorize, record, or account for other activities without directly altering a subject’s condition. BFO alignment grounds it as a processual entity, while SULO alignment situates it in a reusable process hierarchy."@en ;
+    rdfs:subClassOf bfo:BFO_0000015 ;
+    rdfs:subClassOf sulo:Process ;
+    ucm:hasBFOAlignment bfo:BFO_0000015 ;
+    ucm:hasSULOAlignment sulo:Process ;
+    ucm:alignmentSemantics "BFO grounding is ontological; SULO alignment is semantic-organizational."@en .
+
+ucm:ObservationProcess a owl:Class ;
+    rdfs:label "observation process"@en ;
+    rdfs:comment "An occurrent in which information about an entity, attribute, or process is obtained or determined. BFO alignment grounds it as a processual entity, while SULO alignment situates it in a reusable process hierarchy."@en ;
+    rdfs:subClassOf bfo:BFO_0000015 ;
+    rdfs:subClassOf sulo:Process ;
+    ucm:hasBFOAlignment bfo:BFO_0000015 ;
+    ucm:hasSULOAlignment sulo:Process ;
+    ucm:alignmentSemantics "BFO grounding is ontological; SULO alignment is semantic-organizational."@en .
+
+ucm:MeasurementProcess a owl:Class ;
+    rdfs:label "measurement process"@en ;
+    rdfs:comment "An observation process in which a quantitative result is determined."@en ;
+    rdfs:subClassOf ucm:ObservationProcess .
+
+ucm:AssessmentProcess a owl:Class ;
+    rdfs:label "assessment process"@en ;
+    rdfs:comment "An observation process in which a qualitative or interpretive result is determined."@en ;
+    rdfs:subClassOf ucm:ObservationProcess .
+
+ucm:Procedure a owl:Class ;
+    rdfs:label "procedure"@en ;
+    rdfs:comment "An occurrent in which diagnostic, therapeutic, preventive, or otherwise clinically relevant actions are performed."@en ;
+    rdfs:subClassOf ucm:CareProcess .
+
+#################################################################
+# PHYSICAL ENTITIES
+#################################################################
+
+ucm:Agent a owl:Class ;
+    rdfs:label "agent"@en ;
+    rdfs:comment "A physical entity that can bear actor roles in relation to processes, statements, reports, or other governed contexts."@en ;
+    rdfs:subClassOf ucm:PhysicalEntity .
+
+ucm:Organization a owl:Class ;
+    rdfs:label "organization"@en ;
+    rdfs:comment "A formally or informally organized social unit that can bear roles, participate in processes, and be accountable for information artifacts or activities."@en ;
+    rdfs:subClassOf ucm:Agent .
+
+ucm:Person a owl:Class ;
+    rdfs:label "person"@en ;
+    rdfs:comment "A human being that may bear roles, attributes, and conditions and may participate in occurrents."@en ;
+    rdfs:subClassOf ucm:Agent .
+
+ucm:Group a owl:Class ;
+    rdfs:label "group"@en ;
+    rdfs:comment "A collection of persons that is treated as a unit in a given context and may bear roles or participate in processes."@en ;
+    rdfs:subClassOf ucm:PhysicalEntity .
+
+ucm:Family a owl:Class ;
+    rdfs:label "family"@en ;
+    rdfs:comment "A group of persons related by kinship, caregiving, or socially recognized family ties."@en ;
+    rdfs:subClassOf ucm:Group .
+
+ucm:Household a owl:Class ;
+    rdfs:label "household"@en ;
+    rdfs:comment "A group of persons who share a living arrangement or are treated as a dwelling unit for service, eligibility, or administrative purposes."@en ;
+    rdfs:subClassOf ucm:Group .
+
+ucm:Patient a owl:Class ;
+    rdfs:label "patient"@en ;
+    rdfs:comment "A person who bears a patient role and is involved in a medical or clinical process."@en ;
+    owl:equivalentClass [
+        a owl:Class ;
+        owl:intersectionOf (
+            ucm:Person
+            [ a owl:Restriction ;
+              owl:onProperty ucm:bearerOf ;
+              owl:someValuesFrom ucm:PatientRole ]
+        )
+    ] .
+
+ucm:Material a owl:Class ;
+    rdfs:label "material"@en ;
+    rdfs:comment "A physical entity that may be used, delivered, consumed, allocated, or observed."@en ;
+    rdfs:subClassOf ucm:PhysicalEntity .
+
+ucm:HousingUnit a owl:Class ;
+    rdfs:label "housing unit"@en ;
+    rdfs:comment "A physical structure that may serve as a dwelling."@en ;
+    rdfs:subClassOf ucm:Material .
+
+ucm:SubstanceExposureAgent a owl:Class ;
+    rdfs:label "substance exposure agent"@en ;
+    rdfs:comment "A physical substance or product whose presence may trigger an adverse response."@en ;
+    rdfs:subClassOf ucm:Material .
+
+#################################################################
+# INFORMATION OBJECTS / CLASSIFICATION LAYER
+#################################################################
+
+ucm:CareDomain a owl:Class ;
+    rdfs:label "care domain"@en ;
+    rdfs:comment "A classification indicating the institutional or organizational context in which activities occur."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:ClinicalCare a owl:Class ;
+    rdfs:label "clinical care"@en ;
+    rdfs:comment "A context involving diagnosis, treatment, or management of physiological or pathological situations."@en ;
+    rdfs:subClassOf ucm:CareDomain .
+
+ucm:SocialCare a owl:Class ;
+    rdfs:label "social care"@en ;
+    rdfs:comment "A context involving response to social or environmental circumstances affecting well-being."@en ;
+    rdfs:subClassOf ucm:CareDomain .
+
+ucm:PublicHealthCare a owl:Class ;
+    rdfs:label "public health care"@en ;
+    rdfs:comment "A context involving population-level prevention, surveillance, or health promotion."@en ;
+    rdfs:subClassOf ucm:CareDomain .
+
+ucm:CareFocus a owl:Class ;
+    rdfs:label "care focus"@en ;
+    rdfs:comment "A classification describing the type of need, problem, concern, or situation toward which activity is directed."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:HealthFocus a owl:Class ;
+    rdfs:label "health focus"@en ;
+    rdfs:comment "A classification for concerns related to physiological or pathological functioning."@en ;
+    rdfs:subClassOf ucm:CareFocus .
+
+ucm:BehavioralFocus a owl:Class ;
+    rdfs:label "behavioral focus"@en ;
+    rdfs:comment "A classification for concerns related to mental, emotional, or behavioral functioning."@en ;
+    rdfs:subClassOf ucm:CareFocus .
+
+ucm:SocialNeed a owl:Class ;
+    rdfs:label "social need"@en ;
+    rdfs:comment "A classification for concerns arising from social or environmental circumstances."@en ;
+    rdfs:subClassOf ucm:CareFocus .
+
+ucm:HousingInstability a owl:Class ;
+    rdfs:label "housing instability"@en ;
+    rdfs:comment "A classification for circumstances in which stable or adequate shelter is lacking or uncertain."@en ;
+    rdfs:subClassOf ucm:SocialNeed .
+
+ucm:InterventionType a owl:Class ;
+    rdfs:label "intervention type"@en ;
+    rdfs:comment "A classification describing the manner in which actions are carried out."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:Provision a owl:Class ;
+    rdfs:label "provision"@en ;
+    rdfs:comment "A classification for approaches involving making goods or services available."@en ;
+    rdfs:subClassOf ucm:InterventionType .
+
+ucm:Counseling a owl:Class ;
+    rdfs:label "counseling"@en ;
+    rdfs:comment "A classification for approaches involving guidance or communication intended to influence understanding or behavior."@en ;
+    rdfs:subClassOf ucm:InterventionType .
+
+ucm:CareCoordination a owl:Class ;
+    rdfs:label "care coordination"@en ;
+    rdfs:comment "A classification for approaches involving organization and alignment of multiple activities or actors."@en ;
+    rdfs:subClassOf ucm:InterventionType .
+
+ucm:Program a owl:Class ;
+    rdfs:label "program"@en ;
+    rdfs:comment "An organized set of rules, services, and resources under a governing framework."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:ServiceSpecification a owl:Class ;
+    rdfs:label "service specification"@en ;
+    rdfs:comment "An information entity describing a type of activity that may be requested, approved, or carried out."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:CarePlan a owl:Class ;
+    rdfs:label "care plan"@en ;
+    rdfs:comment "An information entity describing intended actions, goals, or arrangements."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+#################################################################
+# CONDITIONS / CLINICAL-SOCIAL SITUATIONS
+#################################################################
+
+ucm:Condition a owl:Class ;
+    rdfs:label "condition"@en ;
+    rdfs:comment "A state, situation, or circumstance associated with a subject that may be relevant for intervention, evaluation, or care. The alignment is intentionally SULO-facing because this model area is being organized as a practical semantic layer rather than being fully reduced to a single BFO primitive."@en ;
+    rdfs:subClassOf sulo:Object ;
+    ucm:hasSULOAlignment sulo:Object ;
+    ucm:alignmentSemantics "SULO alignment is primary here because condition acts as a pragmatic semantic category in the UCM rather than a direct BFO commitment."@en .
+
+ucm:HealthCondition a owl:Class ;
+    rdfs:label "health condition"@en ;
+    rdfs:comment "A condition related to physiological or pathological functioning."@en ;
+    rdfs:subClassOf ucm:Condition .
+
+ucm:BehavioralCondition a owl:Class ;
+    rdfs:label "behavioral condition"@en ;
+    rdfs:comment "A condition related to behavior, mental processes, or substance use."@en ;
+    rdfs:subClassOf ucm:Condition .
+
+ucm:SocialCondition a owl:Class ;
+    rdfs:label "social condition"@en ;
+    rdfs:comment "A condition arising from social or environmental circumstances."@en ;
+    rdfs:subClassOf ucm:Condition .
+
+ucm:DispositionalCondition a owl:Class ;
+    rdfs:label "dispositional condition"@en ;
+    rdfs:comment "A condition consisting in a tendency, susceptibility, or risk that may be realized under certain circumstances."@en ;
+    rdfs:subClassOf ucm:Condition , bfo:BFO_0000016 .
+
+ucm:AllergyIntolerance a owl:Class ;
+    rdfs:label "allergy intolerance"@en ;
+    rdfs:comment "A dispositional condition involving risk of adverse response upon exposure to a substance, product, or class."@en ;
+    rdfs:subClassOf ucm:HealthCondition , ucm:DispositionalCondition .
+
+#################################################################
+# CLINICAL / EVALUATIVE QUALIFIERS
+#################################################################
+
+ucm:ClinicalStatus a owl:Class ;
+    rdfs:label "clinical status"@en ;
+    rdfs:comment "An information entity representing current standing."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:VerificationStatus a owl:Class ;
+    rdfs:label "verification status"@en ;
+    rdfs:comment "An information entity representing degree of confirmation."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:Severity a owl:Class ;
+    rdfs:label "severity"@en ;
+    rdfs:comment "An information entity representing degree of seriousness or intensity."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:EnrollmentStatus a owl:Class ;
+    rdfs:label "enrollment status"@en ;
+    rdfs:comment "An information entity representing formal association with a governed context."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:AuthorizationDecision a owl:Class ;
+    rdfs:label "authorization decision"@en ;
+    rdfs:comment "An information entity representing the outcome of a permission evaluation."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+#################################################################
+# STATEMENTS / REPORTS / COLLECTIONS
+#################################################################
+
+ucm:Collection a owl:Class ;
+    rdfs:label "collection"@en ;
+    rdfs:comment "An information entity consisting of zero or more members."@en ;
+    rdfs:subClassOf sulo:Collection ;
+    ucm:hasSULOAlignment sulo:Collection ;
+    ucm:alignmentSemantics "SULO alignment organizes the collection pattern at the semantic layer; ontological grounding is inherited through InformationalEntity where applicable."@en .
+
+ucm:Statement a owl:Class ;
+    rdfs:label "statement"@en ;
+    rdfs:comment "An information entity asserting or recording something about an entity, attribute, or occurrent."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:ClinicalStatement a owl:Class ;
+    rdfs:label "clinical statement"@en ;
+    rdfs:comment "A statement recording a clinically relevant situation."@en ;
+    rdfs:subClassOf ucm:Statement .
+
+ucm:ObservationStatement a owl:Class ;
+    rdfs:label "observation statement"@en ;
+    rdfs:comment "A statement representing the result of an observation process."@en ;
+    rdfs:subClassOf ucm:Statement .
+
+ucm:Report a owl:Class ;
+    rdfs:label "report"@en ;
+    rdfs:comment "An information entity composed of multiple organized statements for communication or record-keeping."@en ;
+    rdfs:subClassOf ucm:Collection , ucm:InformationalEntity .
+
+ucm:ReactionManifestation a owl:Class ;
+    rdfs:label "reaction manifestation"@en ;
+    rdfs:comment "An information entity representing an observed sign or symptom of adverse response."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+#################################################################
+# PARTICIPATION / ROLES
+#################################################################
+
+ucm:Participation a owl:Class ;
+    rdfs:label "participation"@en ;
+    rdfs:comment "An information entity representing involvement of an entity in an occurrent together with contextual details."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:ActorRole a owl:Class ;
+    rdfs:label "actor role"@en ;
+    rdfs:comment "A realizable entity specifying a capacity assumed by an entity in a context."@en ;
+    rdfs:subClassOf bfo:BFO_0000023 ;
+    ucm:hasBFOAlignment bfo:BFO_0000023 ;
+    ucm:alignmentSemantics "Grounded directly to BFO role because this is an ontological role construct rather than a separate SULO semantic category."@en .
+
+ucm:SubjectRole a owl:Class ;
+    rdfs:label "subject role"@en ;
+    rdfs:comment "A role borne by an entity, including a person or group, that is the focus, recipient, or subject of an activity, observation, or administrative process."@en ;
+    rdfs:subClassOf ucm:ActorRole .
+
+ucm:PatientRole a owl:Class ;
+    rdfs:label "patient role"@en ;
+    rdfs:comment "A subject role as defined in clinical or medical contexts."@en ;
+    rdfs:subClassOf ucm:SubjectRole .
+
+ucm:ClientRole a owl:Class ;
+    rdfs:label "client role"@en ;
+    rdfs:comment "A subject role as defined in social services contexts."@en ;
+    rdfs:subClassOf ucm:SubjectRole .
+
+ucm:MemberRole a owl:Class ;
+    rdfs:label "member role"@en ;
+    rdfs:comment "A subject role as defined in payer, program, or enrollment contexts."@en ;
+    rdfs:subClassOf ucm:SubjectRole .
+
+role:BeneficiaryRole a owl:Class ;
+    rdfs:label "beneficiary role"@en ;
+    rdfs:comment "A capacity associated with receiving intended benefit."@en ;
+    rdfs:subClassOf ucm:ActorRole .
+
+ucm:ProviderRole a owl:Class ;
+    rdfs:label "provider role"@en ;
+    rdfs:comment "A capacity associated with performing actions."@en ;
+    rdfs:subClassOf ucm:ActorRole .
+
+ucm:PayerRole a owl:Class ;
+    rdfs:label "payer role"@en ;
+    rdfs:comment "A capacity associated with financing activities."@en ;
+    rdfs:subClassOf ucm:ActorRole .
+
+ucm:RequesterRole a owl:Class ;
+    rdfs:label "requester role"@en ;
+    rdfs:comment "A capacity associated with initiating actions."@en ;
+    rdfs:subClassOf ucm:ActorRole .
+
+ucm:AgentRole a owl:Class ;
+    rdfs:label "agent role"@en ;
+    rdfs:comment "A role borne by an agent in relation to an activity, statement, record, report, or other governed context."@en ;
+    rdfs:subClassOf ucm:ActorRole .
+
+ucm:CustodianRole a owl:Class ;
+    rdfs:label "custodian role"@en ;
+    rdfs:comment "An agent role involving accountability for maintaining an authentic and managed information artifact or record."@en ;
+    rdfs:subClassOf ucm:AgentRole .
+
+ucm:DataEntererRole a owl:Class ;
+    rdfs:label "data enterer role"@en ;
+    rdfs:comment "An agent role involving entering information into a record, statement, or system."@en ;
+    rdfs:subClassOf ucm:AgentRole .
+
+ucm:LegalAuthenticatorRole a owl:Class ;
+    rdfs:label "legal authenticator role"@en ;
+    rdfs:comment "An agent role involving legal authentication and acceptance of responsibility for the content of an information artifact."@en ;
+    rdfs:subClassOf ucm:AgentRole .
+
+#################################################################
+# CARE PROCESS SUBTYPES
+#################################################################
+
+ucm:ProvisioningProcess a owl:Class ;
+    rdfs:label "provisioning process"@en ;
+    rdfs:comment "An occurrent in which something is made available to a recipient."@en ;
+    rdfs:subClassOf ucm:CareProcess ,
+        [ a owl:Restriction ;
+          owl:onProperty ucm:hasBeneficiary ;
+          owl:someValuesFrom ucm:PhysicalEntity ],
+        [ a owl:Restriction ;
+          owl:onProperty ucm:providesResource ;
+          owl:someValuesFrom ucm:PhysicalEntity ] .
+
+ucm:AssignmentProcess a owl:Class ;
+    rdfs:label "assignment process"@en ;
+    rdfs:comment "An occurrent in which an entity is designated or allocated within a context."@en ;
+    rdfs:subClassOf ucm:CareProcess ,
+        [ a owl:Restriction ;
+          owl:onProperty ucm:assignsEntity ;
+          owl:someValuesFrom ucm:PhysicalEntity ] .
+
+ucm:RoleAssignmentProcess a owl:Class ;
+    rdfs:label "role assignment process"@en ;
+    rdfs:comment "An occurrent in which an entity is designated to bear a role."@en ;
+    rdfs:subClassOf ucm:AssignmentProcess ,
+        [ a owl:Restriction ;
+          owl:onProperty ucm:assignsRole ;
+          owl:someValuesFrom ucm:ActorRole ] .
+
+ucm:ResourceAssignmentProcess a owl:Class ;
+    rdfs:label "resource assignment process"@en ;
+    rdfs:comment "An occurrent in which an entity is allocated to a resource to use or occupy."@en ;
+    rdfs:subClassOf ucm:AssignmentProcess ,
+        [ a owl:Restriction ;
+          owl:onProperty ucm:assignsResource ;
+          owl:someValuesFrom ucm:PhysicalEntity ] .
+
+ucm:ProvisioningProcess owl:disjointWith ucm:AssignmentProcess .
+
+#################################################################
+# ADMINISTRATIVE PROCESS SUBTYPES
+#################################################################
+
+ucm:EligibilityDisposition a owl:Class ;
+    rdfs:label "eligibility disposition"@en ;
+    rdfs:comment "A realizable property indicating qualification under defined conditions."@en ;
+    rdfs:subClassOf bfo:BFO_0000016 ;
+    ucm:hasBFOAlignment bfo:BFO_0000016 ;
+    ucm:alignmentSemantics "Grounded directly to BFO disposition because this class is intended as an ontological realizable entity."@en .
+
+ucm:EligibilityDeterminationProcess a owl:Class ;
+    rdfs:label "eligibility determination process"@en ;
+    rdfs:comment "An occurrent in which qualification is evaluated against defined criteria."@en ;
+    rdfs:subClassOf ucm:AdministrativeProcess ,
+        [ a owl:Restriction ;
+          owl:onProperty ucm:hasEligibilitySubject ;
+          owl:someValuesFrom ucm:PhysicalEntity ],
+        [ a owl:Restriction ;
+          owl:onProperty ucm:determinesEligibilityFor ;
+          owl:someValuesFrom owl:Thing ] .
+
+ucm:EnrollmentProcess a owl:Class ;
+    rdfs:label "enrollment process"@en ;
+    rdfs:comment "An occurrent in which an entity becomes formally associated with a governed context."@en ;
+    rdfs:subClassOf ucm:AdministrativeProcess ,
+        [ a owl:Restriction ;
+          owl:onProperty ucm:hasEnrollmentSubject ;
+          owl:someValuesFrom ucm:PhysicalEntity ],
+        [ a owl:Restriction ;
+          owl:onProperty ucm:enrollsInProgram ;
+          owl:someValuesFrom ucm:Program ] .
+
+ucm:AuthorizationProcess a owl:Class ;
+    rdfs:label "authorization process"@en ;
+    rdfs:comment "An occurrent in which permission is granted, denied, or constrained for a specific activity."@en ;
+    rdfs:subClassOf ucm:AdministrativeProcess ,
+        [ a owl:Restriction ;
+          owl:onProperty ucm:hasAuthorizationSubject ;
+          owl:someValuesFrom ucm:PhysicalEntity ],
+        [ a owl:Restriction ;
+          owl:onProperty ucm:resultsInAuthorizationDecision ;
+          owl:someValuesFrom ucm:AuthorizationDecision ] .
+
+ucm:PaymentProcess a owl:Class ;
+    rdfs:label "payment process"@en ;
+    rdfs:comment "An occurrent in which financial value is transferred in relation to activities."@en ;
+    rdfs:subClassOf ucm:AdministrativeProcess .
+
+ucm:AdjudicationProcess a owl:Class ;
+    rdfs:label "adjudication process"@en ;
+    rdfs:comment "An occurrent in which submitted claims or requests are evaluated and resolved according to governing rules."@en ;
+    rdfs:subClassOf ucm:AdministrativeProcess .
+
+ucm:EligibilityDeterminationProcess owl:disjointWith ucm:EnrollmentProcess .
+ucm:EligibilityDeterminationProcess owl:disjointWith ucm:AuthorizationProcess .
+ucm:EnrollmentProcess owl:disjointWith ucm:AuthorizationProcess .
+
+#################################################################
+# REACTION / EVENT SUBMODEL
+#################################################################
+
+ucm:AdverseReactionEvent a owl:Class ;
+    rdfs:label "adverse reaction event"@en ;
+    rdfs:comment "An occurrent in which exposure results in an adverse response. BFO alignment grounds it as a processual entity, while SULO alignment situates it in the reusable process layer."@en ;
+    rdfs:subClassOf bfo:BFO_0000015 ;
+    rdfs:subClassOf sulo:Process ;
+    ucm:hasBFOAlignment bfo:BFO_0000015 ;
+    ucm:hasSULOAlignment sulo:Process ;
+    ucm:alignmentSemantics "BFO grounding is ontological; SULO alignment is semantic-organizational."@en .
+
+#################################################################
+# OBJECT PROPERTIES — CORE CARE
+#################################################################
+
+ucm:hasDomain a owl:ObjectProperty ;
+    rdfs:label "has domain"@en ;
+    rdfs:comment "Relates an occurrent to the context in which it takes place."@en ;
+    rdfs:domain ucm:CareProcess ;
+    rdfs:range ucm:CareDomain .
+
+ucm:hasFocus a owl:ObjectProperty ;
+    rdfs:label "has focus"@en ;
+    rdfs:comment "Relates an occurrent to the type of need, problem, or concern toward which it is directed."@en ;
+    rdfs:domain ucm:CareProcess ;
+    rdfs:range ucm:CareFocus .
+
+ucm:hasInterventionType a owl:ObjectProperty ;
+    rdfs:label "has intervention type"@en ;
+    rdfs:comment "Relates an occurrent to the manner in which actions are performed."@en ;
+    rdfs:domain ucm:CareProcess ;
+    rdfs:range ucm:InterventionType .
+
+ucm:realizesPlan a owl:ObjectProperty ;
+    rdfs:label "realizes plan"@en ;
+    rdfs:comment "Relates an occurrent to an information entity describing intended actions it carries out."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range ucm:CarePlan .
+
+#################################################################
+# OBJECT PROPERTIES — PROCESS STRUCTURE
+#################################################################
+
+ucm:hasPhase a owl:ObjectProperty ;
+    rdfs:label "has phase"@en ;
+    rdfs:comment "Relates an occurrent to a temporally bounded part contributing to its execution."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range sulo:Process .
+
+ucm:hasTrigger a owl:ObjectProperty ;
+    rdfs:label "has trigger"@en ;
+    rdfs:comment "Relates an occurrent to another occurrent that initiates it."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range sulo:Process .
+
+ucm:hasInput a owl:ObjectProperty ;
+    rdfs:label "has input"@en ;
+    rdfs:comment "Relates an occurrent to something used or transformed during execution."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range sulo:Object .
+
+ucm:hasOutput a owl:ObjectProperty ;
+    rdfs:label "has output"@en ;
+    rdfs:comment "Relates an occurrent to something produced as a result."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range sulo:Object .
+
+ucm:hasOutcome a owl:ObjectProperty ;
+    rdfs:label "has outcome"@en ;
+    rdfs:comment "Relates an occurrent to a resulting state, result, or evaluative finding."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range ucm:InformationalEntity .
+
+#################################################################
+# OBJECT PROPERTIES — PARTICIPATION / ROLE / MEMBERSHIP
+#################################################################
+
+ucm:hasParticipant a owl:ObjectProperty ;
+    rdfs:label "has participant"@en ;
+    rdfs:comment "Relates a participation record to an entity involved in an occurrent."@en ;
+    rdfs:subPropertyOf sulo:hasParticipant ;
+    rdfs:domain ucm:Participation ;
+    rdfs:range ucm:PhysicalEntity .
+
+ucm:hasAgentParticipant a owl:ObjectProperty ;
+    rdfs:label "has agent participant"@en ;
+    rdfs:comment "Relates a participation record to an agent involved in an occurrent or governed context."@en ;
+    rdfs:subPropertyOf ucm:hasParticipant ;
+    rdfs:domain ucm:Participation ;
+    rdfs:range ucm:Agent .
+
+ucm:inProcess a owl:ObjectProperty ;
+    rdfs:label "in process"@en ;
+    rdfs:comment "Relates a participation record to the occurrent in which involvement occurs."@en ;
+    rdfs:domain ucm:Participation ;
+    rdfs:range sulo:Process .
+
+ucm:hasRole a owl:ObjectProperty ;
+    rdfs:label "has role"@en ;
+    rdfs:comment "Relates a participation record to the capacity in which involvement occurs."@en ;
+    rdfs:domain ucm:Participation ;
+    rdfs:range ucm:ActorRole .
+
+ucm:bearerOf a owl:ObjectProperty ;
+    rdfs:label "bearer of"@en ;
+    rdfs:comment "Relates an entity to a role it bears."@en ;
+    rdfs:domain ucm:PhysicalEntity ;
+    rdfs:range ucm:ActorRole ;
+    owl:equivalentProperty bfo:BFO_0000196 .
+
+ucm:hasMember a owl:ObjectProperty ;
+    rdfs:label "has member"@en ;
+    rdfs:comment "Relates a group to a person who belongs to it as a member. This is a structural membership relation, not process participation."@en ;
+    rdfs:domain ucm:Group ;
+    rdfs:range ucm:Person .
+
+ucm:memberOf a owl:ObjectProperty ;
+    rdfs:label "member of"@en ;
+    rdfs:comment "Relates a person to a group of which the person is a member. This is a structural membership relation, not process participation."@en ;
+    rdfs:domain ucm:Person ;
+    rdfs:range ucm:Group ;
+    owl:inverseOf ucm:hasMember .
+
+#################################################################
+# OBJECT PROPERTIES — PROVISIONING / ASSIGNMENT
+#################################################################
+
+ucm:hasBeneficiary a owl:ObjectProperty ;
+    rdfs:label "has beneficiary"@en ;
+    rdfs:comment "Relates an occurrent to an entity that receives intended benefit."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range ucm:PhysicalEntity .
+
+ucm:providesResource a owl:ObjectProperty ;
+    rdfs:label "provides resource"@en ;
+    rdfs:comment "Relates an occurrent to something made available or delivered."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range ucm:PhysicalEntity .
+
+ucm:assignsEntity a owl:ObjectProperty ;
+    rdfs:label "assigns entity"@en ;
+    rdfs:comment "Relates an occurrent to something designated or allocated."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range ucm:PhysicalEntity .
+
+ucm:assignsRole a owl:ObjectProperty ;
+    rdfs:label "assigns role"@en ;
+    rdfs:comment "Relates an occurrent to a role that is conferred or designated."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range ucm:ActorRole .
+
+ucm:assignsResource a owl:ObjectProperty ;
+    rdfs:label "assigns resource"@en ;
+    rdfs:comment "Relates an occurrent to something allocated without necessarily transferring access or possession."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range ucm:PhysicalEntity .
+
+#################################################################
+# OBJECT PROPERTIES — ADMINISTRATIVE
+#################################################################
+
+ucm:hasEligibilityDisposition a owl:ObjectProperty ;
+    rdfs:label "has eligibility disposition"@en ;
+    rdfs:comment "Relates an entity to a realizable property indicating qualification."@en ;
+    rdfs:domain ucm:PhysicalEntity ;
+    rdfs:range ucm:EligibilityDisposition .
+
+ucm:hasEligibilitySubject a owl:ObjectProperty ;
+    rdfs:label "has eligibility subject"@en ;
+    rdfs:comment "Relates an occurrent to the entity whose qualification is being evaluated."@en ;
+    rdfs:domain ucm:EligibilityDeterminationProcess ;
+    rdfs:range ucm:PhysicalEntity .
+
+ucm:determinesEligibilityFor a owl:ObjectProperty ;
+    rdfs:label "determines eligibility for"@en ;
+    rdfs:comment "Relates an occurrent to the governed context, activity, or specification against which qualification is evaluated."@en ;
+    rdfs:domain ucm:EligibilityDeterminationProcess ;
+    rdfs:range owl:Thing .
+
+ucm:resultsInEligibilityDisposition a owl:ObjectProperty ;
+    rdfs:label "results in eligibility disposition"@en ;
+    rdfs:comment "Relates an occurrent to the realizable property it establishes or confirms."@en ;
+    rdfs:domain ucm:EligibilityDeterminationProcess ;
+    rdfs:range ucm:EligibilityDisposition .
+
+ucm:hasEnrollmentSubject a owl:ObjectProperty ;
+    rdfs:label "has enrollment subject"@en ;
+    rdfs:comment "Relates an occurrent to the entity becoming formally associated with a governed context."@en ;
+    rdfs:domain ucm:EnrollmentProcess ;
+    rdfs:range ucm:PhysicalEntity .
+
+ucm:enrollsInProgram a owl:ObjectProperty ;
+    rdfs:label "enrolls in program"@en ;
+    rdfs:comment "Relates an occurrent to the governed context into which formal association is established."@en ;
+    rdfs:domain ucm:EnrollmentProcess ;
+    rdfs:range ucm:Program .
+
+ucm:resultsInEnrollmentStatus a owl:ObjectProperty ;
+    rdfs:label "results in enrollment status"@en ;
+    rdfs:comment "Relates an occurrent to the information entity recording formal association."@en ;
+    rdfs:domain ucm:EnrollmentProcess ;
+    rdfs:range ucm:EnrollmentStatus .
+
+ucm:isEnrolledIn a owl:ObjectProperty ;
+    rdfs:label "is enrolled in"@en ;
+    rdfs:comment "Relates an entity to a governed context with which it is formally associated."@en ;
+    rdfs:domain ucm:PhysicalEntity ;
+    rdfs:range ucm:Program .
+
+ucm:hasAuthorizationSubject a owl:ObjectProperty ;
+    rdfs:label "has authorization subject"@en ;
+    rdfs:comment "Relates an occurrent to the entity for whom permission is being evaluated."@en ;
+    rdfs:domain ucm:AuthorizationProcess ;
+    rdfs:range ucm:PhysicalEntity .
+
+ucm:authorizesProcess a owl:ObjectProperty ;
+    rdfs:label "authorizes process"@en ;
+    rdfs:comment "Relates an occurrent to the activity whose performance is being permitted, denied, or constrained."@en ;
+    rdfs:domain ucm:AuthorizationProcess ;
+    rdfs:range ucm:CareProcess .
+
+ucm:authorizesServiceSpecification a owl:ObjectProperty ;
+    rdfs:label "authorizes service specification"@en ;
+    rdfs:comment "Relates an occurrent to the specification describing the kind of activity under permission evaluation."@en ;
+    rdfs:domain ucm:AuthorizationProcess ;
+    rdfs:range ucm:ServiceSpecification .
+
+ucm:resultsInAuthorizationDecision a owl:ObjectProperty ;
+    rdfs:label "results in authorization decision"@en ;
+    rdfs:comment "Relates an occurrent to the information entity recording the outcome of a permission evaluation."@en ;
+    rdfs:domain ucm:AuthorizationProcess ;
+    rdfs:range ucm:AuthorizationDecision .
+
+ucm:enablesProcess a owl:ObjectProperty ;
+    rdfs:label "enables process"@en ;
+    rdfs:comment "Relates an occurrent that allows, governs, or permits another to occur."@en ;
+    rdfs:domain ucm:AdministrativeProcess ;
+    rdfs:range ucm:CareProcess .
+
+ucm:hasAdministrativePrecondition a owl:ObjectProperty ;
+    rdfs:label "has administrative precondition"@en ;
+    rdfs:comment "Relates an occurrent to another that must occur before it can proceed."@en ;
+    rdfs:domain ucm:CareProcess ;
+    rdfs:range ucm:AdministrativeProcess .
+
+ucm:governsProgram a owl:ObjectProperty ;
+    rdfs:label "governs program"@en ;
+    rdfs:comment "Relates an occurrent to the governed context within which it operates."@en ;
+    rdfs:domain ucm:AdministrativeProcess ;
+    rdfs:range ucm:Program .
+
+ucm:paysFor a owl:ObjectProperty ;
+    rdfs:label "pays for"@en ;
+    rdfs:comment "Relates an occurrent involving financial transfer to an activity for which value is transferred."@en ;
+    rdfs:domain ucm:PaymentProcess ;
+    rdfs:range ucm:CareProcess .
+
+ucm:precedesAdministrativeProcess a owl:ObjectProperty ;
+    rdfs:label "precedes administrative process"@en ;
+    rdfs:comment "Relates one governing occurrent to another that typically follows it in a workflow."@en ;
+    rdfs:domain ucm:AdministrativeProcess ;
+    rdfs:range ucm:AdministrativeProcess .
+
+ucm:hasBasisInEligibility a owl:ObjectProperty ;
+    rdfs:label "has basis in eligibility"@en ;
+    rdfs:comment "Relates an occurrent to a prior qualification evaluation or qualification-bearing attribute on which it depends."@en ;
+    rdfs:domain ucm:AdministrativeProcess ;
+    rdfs:range owl:Thing .
+
+#################################################################
+# OBJECT PROPERTIES — CONDITIONS / CLINICAL
+#################################################################
+
+ucm:hasCondition a owl:ObjectProperty ;
+    rdfs:label "has condition"@en ;
+    rdfs:comment "Relates a subject to a state, situation, or circumstance associated with it."@en ;
+    rdfs:domain ucm:Person ;
+    rdfs:range ucm:Condition .
+
+ucm:hasAllergyIntolerance a owl:ObjectProperty ;
+    rdfs:label "has allergy intolerance"@en ;
+    rdfs:comment "Relates a subject to a susceptibility for adverse response associated with exposure."@en ;
+    rdfs:domain ucm:Person ;
+    rdfs:range ucm:AllergyIntolerance ;
+    rdfs:subPropertyOf ucm:hasCondition .
+
+ucm:instanceOfFocus a owl:ObjectProperty ;
+    rdfs:label "instance of focus"@en ;
+    rdfs:comment "Relates a condition to the classification it exemplifies."@en ;
+    rdfs:domain ucm:Condition ;
+    rdfs:range ucm:CareFocus .
+
+ucm:addressesCondition a owl:ObjectProperty ;
+    rdfs:label "addresses condition"@en ;
+    rdfs:comment "Relates an occurrent to a condition it is intended to manage, monitor, treat, prevent, or otherwise influence."@en ;
+    rdfs:domain ucm:CareProcess ;
+    rdfs:range ucm:Condition .
+
+ucm:targetsFocus a owl:ObjectProperty ;
+    rdfs:label "targets focus"@en ;
+    rdfs:comment "Relates an occurrent to the classification of concern toward which it is directed."@en ;
+    rdfs:domain ucm:CareProcess ;
+    rdfs:range ucm:CareFocus .
+
+ucm:hasClinicalStatus a owl:ObjectProperty ;
+    rdfs:label "has clinical status"@en ;
+    rdfs:comment "Relates a condition to its current standing."@en ;
+    rdfs:domain ucm:Condition ;
+    rdfs:range ucm:ClinicalStatus .
+
+ucm:hasVerificationStatus a owl:ObjectProperty ;
+    rdfs:label "has verification status"@en ;
+    rdfs:comment "Relates a condition to its degree of confirmation."@en ;
+    rdfs:domain ucm:Condition ;
+    rdfs:range ucm:VerificationStatus .
+
+ucm:hasSeverity a owl:ObjectProperty ;
+    rdfs:label "has severity"@en ;
+    rdfs:comment "Relates a condition, statement, or reaction evidence to degree of seriousness."@en ;
+    rdfs:domain sulo:Object ;
+    rdfs:range ucm:Severity .
+
+ucm:hasOnset a owl:ObjectProperty ;
+    rdfs:label "has onset"@en ;
+    rdfs:comment "Relates a condition to an information entity marking when it began or was first recognized."@en ;
+    rdfs:domain ucm:Condition ;
+    rdfs:range ucm:InformationalEntity .
+
+ucm:hasAbatement a owl:ObjectProperty ;
+    rdfs:label "has abatement"@en ;
+    rdfs:comment "Relates a condition to an information entity marking when it ended or became inactive."@en ;
+    rdfs:domain ucm:Condition ;
+    rdfs:range ucm:InformationalEntity .
+
+#################################################################
+# OBJECT PROPERTIES — OBSERVATION / STATEMENT / REPORT
+#################################################################
+
+ucm:producesStatement a owl:ObjectProperty ;
+    rdfs:label "produces statement"@en ;
+    rdfs:comment "Relates an observation process to the statement it produces."@en ;
+    rdfs:domain ucm:ObservationProcess ;
+    rdfs:range ucm:ObservationStatement .
+
+ucm:hasOutputStatement a owl:ObjectProperty ;
+    rdfs:label "has output statement"@en ;
+    rdfs:comment "Relates an occurrent to a statement generated as an output."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range ucm:Statement .
+
+ucm:aboutEntity a owl:ObjectProperty ;
+    rdfs:label "about entity"@en ;
+    rdfs:comment "Relates a statement to an entity it concerns."@en ;
+    rdfs:domain ucm:Statement ;
+    rdfs:range sulo:Object .
+
+ucm:aboutProcess a owl:ObjectProperty ;
+    rdfs:label "about process"@en ;
+    rdfs:comment "Relates a statement to an occurrent it concerns."@en ;
+    rdfs:domain ucm:Statement ;
+    rdfs:range sulo:Process .
+
+ucm:aboutInformationEntity a owl:ObjectProperty ;
+    rdfs:label "about information entity"@en ;
+    rdfs:comment "Relates a statement, participation, or process to an information artifact or informational entity it concerns."@en ;
+    rdfs:domain owl:Thing ;
+    rdfs:range ucm:InformationalEntity .
+
+ucm:hasCustodian a owl:ObjectProperty ;
+    rdfs:label "has custodian"@en ;
+    rdfs:comment "Relates an informational entity to the agent accountable for maintaining or stewarding it."@en ;
+    rdfs:domain ucm:InformationalEntity ;
+    rdfs:range ucm:Agent .
+
+ucm:entersDataFor a owl:ObjectProperty ;
+    rdfs:label "enters data for"@en ;
+    rdfs:comment "Relates a process or participation context to the informational entity whose content is entered or updated."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range ucm:InformationalEntity .
+
+ucm:authenticates a owl:ObjectProperty ;
+    rdfs:label "authenticates"@en ;
+    rdfs:comment "Relates a process to the informational entity whose content is authenticated or attested."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range ucm:InformationalEntity .
+
+ucm:hasValue a owl:ObjectProperty ;
+    rdfs:label "has value"@en ;
+    rdfs:comment "Relates an observation statement to the informational value it conveys."@en ;
+    rdfs:domain ucm:ObservationStatement ;
+    rdfs:range ucm:InformationalEntity .
+
+ucm:hasUnit a owl:ObjectProperty ;
+    rdfs:label "has unit"@en ;
+    rdfs:comment "Relates a statement to a unit of measure."@en ;
+    rdfs:domain ucm:ObservationStatement ;
+    rdfs:range ucm:InformationalEntity .
+
+ucm:assertsCondition a owl:ObjectProperty ;
+    rdfs:label "asserts condition"@en ;
+    rdfs:comment "Relates a statement to a condition it records or asserts."@en ;
+    rdfs:domain ucm:ClinicalStatement ;
+    rdfs:range ucm:Condition .
+
+ucm:hasMemberStatement a owl:ObjectProperty ;
+    rdfs:label "has member statement"@en ;
+    rdfs:comment "Relates a collection to a member item, especially a statement or informational component it contains."@en ;
+    rdfs:domain ucm:Collection ;
+    rdfs:range owl:Thing .
+
+ucm:hasStatement a owl:ObjectProperty ;
+    rdfs:label "has statement"@en ;
+    rdfs:comment "Relates a report to a statement it contains."@en ;
+    rdfs:domain ucm:Report ;
+    rdfs:range ucm:Statement .
+
+ucm:documentsProcess a owl:ObjectProperty ;
+    rdfs:label "documents process"@en ;
+    rdfs:comment "Relates a report to an occurrent it documents."@en ;
+    rdfs:domain ucm:Report ;
+    rdfs:range sulo:Process .
+
+#################################################################
+# OBJECT PROPERTIES — MATERIALS / REACTIONS
+#################################################################
+
+ucm:usesMaterial a owl:ObjectProperty ;
+    rdfs:label "uses material"@en ;
+    rdfs:comment "Relates an occurrent to a physical entity employed during execution."@en ;
+    rdfs:domain ucm:CareProcess ;
+    rdfs:range ucm:Material .
+
+ucm:hasCausativeAgent a owl:ObjectProperty ;
+    rdfs:label "has causative agent"@en ;
+    rdfs:comment "Relates a susceptibility for adverse response to the substance or product that may realize it."@en ;
+    rdfs:domain ucm:AllergyIntolerance ;
+    rdfs:range ucm:SubstanceExposureAgent .
+
+ucm:hasManifestation a owl:ObjectProperty ;
+    rdfs:label "has manifestation"@en ;
+    rdfs:comment "Relates reaction evidence to an observed sign or symptom."@en ;
+    rdfs:domain ucm:InformationalEntity ;
+    rdfs:range ucm:ReactionManifestation .
+
+ucm:realizesDisposition a owl:ObjectProperty ;
+    rdfs:label "realizes disposition"@en ;
+    rdfs:comment "Relates an occurrent to a susceptibility that becomes manifest through it."@en ;
+    rdfs:domain sulo:Process ;
+    rdfs:range ucm:DispositionalCondition .
+
+ucm:hasReactionEvent a owl:ObjectProperty ;
+    rdfs:label "has reaction event"@en ;
+    rdfs:comment "Relates a susceptibility for adverse response to an occurrent that provides evidence of its realization."@en ;
+    rdfs:domain ucm:AllergyIntolerance ;
+    rdfs:range ucm:AdverseReactionEvent .
+
+#################################################################
+# USEFUL CONSTRAINTS
+#################################################################
+
+ucm:AllergyIntolerance rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty ucm:hasCausativeAgent ;
+      owl:someValuesFrom ucm:SubstanceExposureAgent ] .
+
+ucm:Procedure rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty ucm:addressesCondition ;
+      owl:someValuesFrom ucm:Condition ] .
+
+ucm:Report rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty ucm:hasStatement ;
+      owl:allValuesFrom ucm:Statement ] .
+
+#################################################################
+# EXAMPLE SPECIALIZATIONS
+#################################################################
+
+ucm:HousingProvisioningProcess a owl:Class ;
+    rdfs:label "housing provisioning process"@en ;
+    rdfs:comment "An occurrent in which a dwelling is made available to a recipient."@en ;
+    rdfs:subClassOf ucm:ProvisioningProcess ,
+        [ a owl:Restriction ;
+          owl:onProperty ucm:providesResource ;
+          owl:someValuesFrom ucm:HousingUnit ] .
+
+ucm:HousingAssignmentProcess a owl:Class ;
+    rdfs:label "housing assignment process"@en ;
+    rdfs:comment "An occurrent in which an entity, including a person or household, is designated to occupy or use a dwelling."@en ;
+    rdfs:subClassOf ucm:ResourceAssignmentProcess ,
+        [ a owl:Restriction ;
+          owl:onProperty ucm:assignsResource ;
+          owl:someValuesFrom ucm:HousingUnit ] .
