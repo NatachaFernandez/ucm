@@ -1,10 +1,40 @@
 @prefix sulo: <http://example.org/sulo#> .
-@prefix ucm:  <http://example.org/ucm#> .
+@prefix ucm: <http://example.org/ucm#> .
 @prefix role: <http://example.org/role#> .
-@prefix bfo:  <http://purl.obolibrary.org/obo/> .
-@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix bfo: <http://purl.obolibrary.org/obo/> .
+@prefix cco: <http://www.ontologyrepository.com/CommonCoreOntologies/> .
+@prefix fhir: <http://hl7.org/fhir/> .
+@prefix schema: <https://schema.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
+ucm: a owl:Ontology ;
+    rdfs:label "Unified Care Model (UCM)"@en ;
+    owl:imports <http://www.ontologyrepository.com/CommonCoreOntologies/> ;
+    owl:imports <http://hl7.org/fhir> ;
+    rdfs:comment "Unified Care Model ontology regenerated from the latest complete merged UCM source and updated with explicit condition typology and ontology-level design principles."@en ;
+    rdfs:comment "Design Principle 1 — Foundational Ontology Alignment Principle: The UCM is grounded in an upper-level ontology (SULO aligned with BFO). All core classes (e.g., PhysicalEntity, Process, Role, InformationEntity) inherit from this foundation to ensure logical consistency, interoperability, and reuse."@en ;
+    rdfs:comment "Design Principle 2 — Role-Based Identity Principle: All contextual identities (e.g., Patient, Client, Member) are modeled as roles (ActorRole). A Person assumes these identities only through bearing the corresponding role."@en ;
+    rdfs:comment "Design Principle 3 — Separation of Semantic Role vs Domain Terminology Principle: A common abstract role (SubjectRole) is used for process participation. Domain-specific roles (PatientRole, ClientRole, MemberRole) are maintained separately to preserve semantic and regulatory distinctions."@en ;
+    rdfs:comment "Design Principle 4 — Contextual Participation Principle: All actors participate in processes through Participation instances that bind the actor, the role, and the process."@en ;
+    rdfs:comment "Design Principle 5 — Domain Decoupling Principle: Clinical, social, public health, and administrative domains are explicitly represented and decoupled to support cross-domain interoperability."@en ;
+    rdfs:comment "Design Principle 6 — Policy and Regulatory Alignment Principle: Different domain-specific roles (Patient, Client, Member) are preserved to support distinct privacy, consent, and regulatory frameworks."@en ;
+    rdfs:comment "Design Principle 7 — Non-Destructive Extension Principle: New capabilities are added by extending the ontology rather than modifying existing structures, ensuring backward compatibility."@en ;
+    rdfs:comment "Design Principle 8 — Ontological Rigor Principle: The model adheres to ontological best practices: roles are realizable entities, persons are physical entities, processes are occurrents, and information objects are explicitly separated from real-world entities."@en ;
+    rdfs:comment "Design Principle 9 — Descriptive vs Logical Separation Principle: Natural language descriptions may refine meaning without enforcing logical constraints unless explicitly modeled through OWL axioms."@en ;
+    rdfs:comment "Design Principle 10 — Interoperability Abstraction Principle: External models (FHIR, HL7, HUD) are mapped to UCM abstractions without collapsing their terminology, preserving semantic nuance."@en ;
+    rdfs:comment "Design Principle 11 — Extensibility and Governance Principle: The model supports lifecycle management, mappings, search/discovery, and governance without altering core semantics."@en ;
+    rdfs:comment "Design Principle 12 — Semantic Normalization Principle: Common patterns (e.g., subject of care, participation, condition, process) are normalized into reusable abstractions to reduce redundancy and improve reasoning."@en ;
+    rdfs:comment "Design Principle 13 — Separation of Evidence, Condition, and Need Principle: Observations and statements represent evidence (state signals); Conditions represent interpreted, relevant situations borne by a subject; CareFocus and SocialNeed represent classifications of actionable concern (needs)."@en ;
+    rdfs:comment "Design Principle 14 — Conditions Are Not Equivalent to Needs Principle: A Condition is a real-world situation; a Need is a contextual classification applied to a condition. The relationship is expressed via instanceOfFocus."@en ;
+    rdfs:comment "Design Principle 15 — Multiple Pathways to Condition Formation Principle: Conditions may arise via assertion (AssertedCondition), inference (DerivedCondition), or disposition/risk (DispositionalCondition and RiskCondition)."@en ;
+    rdfs:comment "Design Principle 16 — Actionability Is Contextual Principle: Not all conditions are actionable in all contexts. A condition becomes operationally actionable when linked to a CareFocus or SocialNeed."@en ;
+    rdfs:comment "Design Principle 17 — Traceability of Inference and Assertion Principle: Derived conditions should be traceable to supporting statements via derivedFromStatement, and asserted conditions should be traceable to originating statements via assertedByStatement."@en ;
+    rdfs:comment "Design Principle 18 — Support for Multiple Classifications Principle: A single condition may instantiate multiple focuses, supporting cross-domain interoperability."@en ;
+    rdfs:comment "Design Principle 19 — Alignment with FHIR Principle: Observation corresponds to the evidence layer, Condition to the interpreted situation layer, and CareFocus/SocialNeed to concern or program classification layers; interventions address conditions and/or target focuses."@en ;
+    rdfs:comment "Design Principle 20 — Preservation of Semantic Fidelity Principle: Observations, conditions, and needs are not collapsed into a single construct; explicit relationships support reasoning, eligibility, and explainability."@en .
 
 #################################################################
 # EXPLICIT ALIGNMENT ANNOTATIONS
@@ -104,22 +134,25 @@ ucm:Procedure a owl:Class ;
 ucm:Agent a owl:Class ;
     rdfs:label "agent"@en ;
     rdfs:comment "A physical entity that can bear actor roles in relation to processes, statements, reports, or other governed contexts."@en ;
-    rdfs:subClassOf ucm:PhysicalEntity .
+    rdfs:subClassOf ucm:PhysicalEntity ;
+    owl:equivalentClass cco:ont00001017 .
 
 ucm:Organization a owl:Class ;
     rdfs:label "organization"@en ;
     rdfs:comment "A formally or informally organized social unit that can bear roles, participate in processes, and be accountable for information artifacts or activities."@en ;
-    rdfs:subClassOf ucm:Agent .
+    rdfs:subClassOf ucm:Agent , cco:ont00001180 ;
+    owl:equivalentClass schema:Organization .
 
 ucm:Person a owl:Class ;
     rdfs:label "person"@en ;
     rdfs:comment "A human being that may bear roles, attributes, and conditions and may participate in occurrents."@en ;
-    rdfs:subClassOf ucm:Agent .
+    rdfs:subClassOf ucm:Agent ;
+    owl:equivalentClass cco:ont00001262 , schema:Person .
 
 ucm:Group a owl:Class ;
     rdfs:label "group"@en ;
     rdfs:comment "A collection of persons that is treated as a unit in a given context and may bear roles or participate in processes."@en ;
-    rdfs:subClassOf ucm:PhysicalEntity .
+    rdfs:subClassOf ucm:PhysicalEntity , cco:ont00000300 .
 
 ucm:Family a owl:Class ;
     rdfs:label "family"@en ;
@@ -134,7 +167,7 @@ ucm:Household a owl:Class ;
 ucm:Patient a owl:Class ;
     rdfs:label "patient"@en ;
     rdfs:comment "A person who bears a patient role and is involved in a medical or clinical process."@en ;
-    owl:equivalentClass [
+    owl:equivalentClass fhir:Patient , [
         a owl:Class ;
         owl:intersectionOf (
             ucm:Person
@@ -273,6 +306,21 @@ ucm:DispositionalCondition a owl:Class ;
     rdfs:label "dispositional condition"@en ;
     rdfs:comment "A condition consisting in a tendency, susceptibility, or risk that may be realized under certain circumstances."@en ;
     rdfs:subClassOf ucm:Condition , bfo:BFO_0000016 .
+
+ucm:AssertedCondition a owl:Class ;
+    rdfs:label "asserted condition"@en ;
+    rdfs:comment "A condition explicitly asserted by a clinician, case manager, assessor, or system of record."@en ;
+    rdfs:subClassOf ucm:Condition .
+
+ucm:DerivedCondition a owl:Class ;
+    rdfs:label "derived condition"@en ;
+    rdfs:comment "A condition inferred from one or more observations, statements, or other conditions."@en ;
+    rdfs:subClassOf ucm:Condition .
+
+ucm:RiskCondition a owl:Class ;
+    rdfs:label "risk condition"@en ;
+    rdfs:comment "A dispositional condition representing increased likelihood of a future adverse state."@en ;
+    rdfs:subClassOf ucm:DispositionalCondition .
 
 ucm:AllergyIntolerance a owl:Class ;
     rdfs:label "allergy intolerance"@en ;
@@ -642,7 +690,8 @@ ucm:memberOf a owl:ObjectProperty ;
     rdfs:comment "Relates a person to a group of which the person is a member. This is a structural membership relation, not process participation."@en ;
     rdfs:domain ucm:Person ;
     rdfs:range ucm:Group ;
-    owl:inverseOf ucm:hasMember .
+    owl:inverseOf ucm:hasMember ;
+    owl:equivalentProperty schema:memberOf .
 
 #################################################################
 # OBJECT PROPERTIES — PROVISIONING / ASSIGNMENT
@@ -809,7 +858,7 @@ ucm:hasAllergyIntolerance a owl:ObjectProperty ;
 
 ucm:instanceOfFocus a owl:ObjectProperty ;
     rdfs:label "instance of focus"@en ;
-    rdfs:comment "Relates a condition to the classification it exemplifies."@en ;
+    rdfs:comment "Relates a condition instance to a CareFocus or SocialNeed classification that defines its actionable meaning in a given context."@en ;
     rdfs:domain ucm:Condition ;
     rdfs:range ucm:CareFocus .
 
@@ -924,6 +973,18 @@ ucm:assertsCondition a owl:ObjectProperty ;
     rdfs:comment "Relates a statement to a condition it records or asserts."@en ;
     rdfs:domain ucm:ClinicalStatement ;
     rdfs:range ucm:Condition .
+
+ucm:derivedFromStatement a owl:ObjectProperty ;
+    rdfs:label "derived from statement"@en ;
+    rdfs:comment "Links a derived condition to the statements or observations from which it was inferred."@en ;
+    rdfs:domain ucm:DerivedCondition ;
+    rdfs:range ucm:Statement .
+
+ucm:assertedByStatement a owl:ObjectProperty ;
+    rdfs:label "asserted by statement"@en ;
+    rdfs:comment "Links an asserted condition to the clinical statement that recorded it."@en ;
+    rdfs:domain ucm:AssertedCondition ;
+    rdfs:range ucm:ClinicalStatement .
 
 ucm:hasMemberStatement a owl:ObjectProperty ;
     rdfs:label "has member statement"@en ;
