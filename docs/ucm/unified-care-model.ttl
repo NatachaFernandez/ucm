@@ -14,7 +14,7 @@ ucm: a owl:Ontology ;
     rdfs:label "Unified Care Model (UCM)"@en ;
     owl:imports <http://www.ontologyrepository.com/CommonCoreOntologies/> ;
     owl:imports <http://hl7.org/fhir> ;
-    rdfs:comment "Unified Care Model ontology regenerated from the latest complete merged UCM source and updated with explicit condition typology and ontology-level design principles."@en ;
+    rdfs:comment "Unified Care Model ontology regenerated from the latest complete merged UCM source and updated with explicit condition typology, definition-driven group semantics, cross-domain DefinitionArtifact modeling, and ontology-level design principles."@en ;
     rdfs:comment "Design Principle 1 — Foundational Ontology Alignment Principle: The UCM is grounded in an upper-level ontology (SULO aligned with BFO). All core classes (e.g., PhysicalEntity, Process, Role, InformationEntity) inherit from this foundation to ensure logical consistency, interoperability, and reuse."@en ;
     rdfs:comment "Design Principle 2 — Role-Based Identity Principle: All contextual identities (e.g., Patient, Client, Member) are modeled as roles (ActorRole). A Person assumes these identities only through bearing the corresponding role."@en ;
     rdfs:comment "Design Principle 3 — Separation of Semantic Role vs Domain Terminology Principle: A common abstract role (SubjectRole) is used for process participation. Domain-specific roles (PatientRole, ClientRole, MemberRole) are maintained separately to preserve semantic and regulatory distinctions."@en ;
@@ -34,7 +34,12 @@ ucm: a owl:Ontology ;
     rdfs:comment "Design Principle 17 — Traceability of Inference and Assertion Principle: Derived conditions should be traceable to supporting statements via derivedFromStatement, and asserted conditions should be traceable to originating statements via assertedByStatement."@en ;
     rdfs:comment "Design Principle 18 — Support for Multiple Classifications Principle: A single condition may instantiate multiple focuses, supporting cross-domain interoperability."@en ;
     rdfs:comment "Design Principle 19 — Alignment with FHIR Principle: Observation corresponds to the evidence layer, Condition to the interpreted situation layer, and CareFocus/SocialNeed to concern or program classification layers; interventions address conditions and/or target focuses."@en ;
-    rdfs:comment "Design Principle 20 — Preservation of Semantic Fidelity Principle: Observations, conditions, and needs are not collapsed into a single construct; explicit relationships support reasoning, eligibility, and explainability."@en .
+    rdfs:comment "Design Principle 20 — Preservation of Semantic Fidelity Principle: Observations, conditions, and needs are not collapsed into a single construct; explicit relationships support reasoning, eligibility, and explainability."@en ;
+    rdfs:comment "Design Principle 21 — Defined Group Principle: A Group is interpreted as the result of applying a specific definition, policy, program rule, organizational rule, or other definition artifact, rather than merely as a set of members."@en ;
+    rdfs:comment "Design Principle 22 — Group Identity by Definition Principle: The identity and intended meaning of a Group are grounded in the DefinitionArtifact that defines it. Two Groups with identical members may remain distinct if they are defined by different artifacts."@en ;
+    rdfs:comment "Design Principle 23 — Separate Groups for Separate Definitions Principle: When different definitions produce different memberships, or when different policies or domains define group membership differently, separate Group instances should be used rather than assigning multiple definitions to a single Group."@en ;
+    rdfs:comment "Design Principle 24 — Membership Equivalence Outside Core Ontology Principle: Determining that two Groups happen to have the same members is an application, analytics, or governance concern and is not required to establish ontological identity in the UCM."@en ;
+    rdfs:comment "Design Principle 25 — Cross-Domain Definition Artifact Principle: DefinitionArtifact is a reusable informational construct that supplies the criteria, rules, or contextual conditions used to constitute, classify, or interpret entities across care domains. Group definition is one primary use, but the same pattern can also support conditions, eligibility, cohorts, populations, care focuses, programs, and other policy- or rule-defined constructs without embedding execution logic in the ontology."@en .
 
 #################################################################
 # EXPLICIT ALIGNMENT ANNOTATIONS
@@ -151,17 +156,28 @@ ucm:Person a owl:Class ;
 
 ucm:Group a owl:Class ;
     rdfs:label "group"@en ;
-    rdfs:comment "A collection of persons that is treated as a unit in a given context and may bear roles or participate in processes."@en ;
-    rdfs:subClassOf ucm:PhysicalEntity , cco:ont00000300 .
+    rdfs:comment "A collection of persons treated as a unit under a specific GroupDefinitionArtifact, such as a policy, program rule, organizational rule, kinship definition, spatial definition, or other definitional source. Group identity in the UCM is grounded in the applied definition rather than in member-set equivalence alone."@en ;
+    rdfs:subClassOf ucm:PhysicalEntity , cco:ont00000300 ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ucm:hasMember ;
+        owl:someValuesFrom ucm:Person
+    ] ;
+    rdfs:subClassOf [
+        a owl:Restriction ;
+        owl:onProperty ucm:definedBy ;
+        owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+        owl:onClass ucm:GroupDefinitionArtifact
+    ] .
 
 ucm:Family a owl:Class ;
     rdfs:label "family"@en ;
-    rdfs:comment "A group of persons related by kinship, caregiving, or socially recognized family ties."@en ;
+    rdfs:comment "A group of persons treated as a family under the specific definition artifact that defines the group. The UCM does not assume that family always means co-residence, nuclear family, extended family, or any particular regulatory eligibility unit; those meanings are supplied through definedBy."@en ;
     rdfs:subClassOf ucm:Group .
 
 ucm:Household a owl:Class ;
     rdfs:label "household"@en ;
-    rdfs:comment "A group of persons who share a living arrangement or are treated as a dwelling unit for service, eligibility, or administrative purposes."@en ;
+    rdfs:comment "A group of persons treated as a household under the specific definition artifact that defines the group. A household may be based on co-residence, census policy, benefit-program rules, housing-program rules, or another explicit definition."@en ;
     rdfs:subClassOf ucm:Group .
 
 ucm:Patient a owl:Class ;
@@ -276,6 +292,62 @@ ucm:CarePlan a owl:Class ;
     rdfs:comment "An information entity describing intended actions, goals, or arrangements."@en ;
     rdfs:subClassOf ucm:InformationalEntity .
 
+ucm:DefinitionArtifact a owl:Class ;
+    rdfs:label "definition artifact"@en ;
+    rdfs:comment "An informational entity that specifies criteria, rules, thresholds, or contextual conditions used to constitute, classify, or interpret entities across care domains. A DefinitionArtifact anchors semantic meaning without requiring the UCM ontology to execute the rule logic itself."@en ;
+    rdfs:comment "Definition artifacts may originate from policies, statutes, regulations, program rules, clinical criteria, social care frameworks, organizational conventions, public health definitions, cohort specifications, or other authoritative or operational sources."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:GroupDefinitionArtifact a owl:Class ;
+    rdfs:label "group definition artifact"@en ;
+    rdfs:comment "A definition artifact that specifies the criteria by which a Group is constituted or interpreted, including the criteria used to determine intended membership. Group identity in the UCM is grounded in this definitional context rather than in member-set equivalence alone."@en ;
+    rdfs:subClassOf ucm:DefinitionArtifact .
+
+ucm:ConditionDefinitionArtifact a owl:Class ;
+    rdfs:label "condition definition artifact"@en ;
+    rdfs:comment "A definition artifact that specifies criteria for recognizing, classifying, or interpreting a condition, including clinical, behavioral, social, or risk-related criteria."@en ;
+    rdfs:subClassOf ucm:DefinitionArtifact .
+
+ucm:EligibilityDefinitionArtifact a owl:Class ;
+    rdfs:label "eligibility definition artifact"@en ;
+    rdfs:comment "A definition artifact that specifies criteria used to determine eligibility, qualification, authorization, enrollment, or benefit access within a governed context."@en ;
+    rdfs:subClassOf ucm:DefinitionArtifact .
+
+ucm:PopulationDefinitionArtifact a owl:Class ;
+    rdfs:label "population definition artifact"@en ;
+    rdfs:comment "A definition artifact that specifies inclusion, exclusion, or stratification criteria for a cohort, panel, population, reporting group, or surveillance group."@en ;
+    rdfs:subClassOf ucm:DefinitionArtifact .
+
+ucm:CareFocusDefinitionArtifact a owl:Class ;
+    rdfs:label "care focus definition artifact"@en ;
+    rdfs:comment "A definition artifact that specifies criteria for interpreting a concern, need, focus, or actionable classification within a care domain."@en ;
+    rdfs:subClassOf ucm:DefinitionArtifact .
+
+ucm:PolicyDefinitionArtifact a owl:Class ;
+    rdfs:label "policy definition artifact"@en ;
+    rdfs:comment "A definition artifact supplied by a policy, statute, regulation, guidance document, or other governance source. Depending on its use, an instance may also be a group, condition, eligibility, population, or care-focus definition artifact."@en ;
+    rdfs:subClassOf ucm:DefinitionArtifact .
+
+ucm:ProgramDefinitionArtifact a owl:Class ;
+    rdfs:label "program definition artifact"@en ;
+    rdfs:comment "A definition artifact supplied by a program or benefit framework. It may define eligibility units, households, families, care pathways, service access, benefit rules, cohorts, or other program-defined constructs."@en ;
+    rdfs:subClassOf ucm:DefinitionArtifact .
+
+ucm:KinshipDefinitionArtifact a owl:Class ;
+    rdfs:label "kinship definition artifact"@en ;
+    rdfs:comment "A group definition artifact that determines group membership using kinship, caregiving, legal, or socially recognized family relationships."@en ;
+    rdfs:subClassOf ucm:GroupDefinitionArtifact .
+
+ucm:SpatialDefinitionArtifact a owl:Class ;
+    rdfs:label "spatial definition artifact"@en ;
+    rdfs:comment "A group definition artifact that determines group membership using co-residence, dwelling, location, housing unit, or other spatial criteria."@en ;
+    rdfs:subClassOf ucm:GroupDefinitionArtifact .
+
+ucm:OrganizationalDefinitionArtifact a owl:Class ;
+    rdfs:label "organizational definition artifact"@en ;
+    rdfs:comment "A definition artifact supplied by an organization or operational governance context. It may define group membership, care team composition, panels, operational assignments, service eligibility, or other organization-defined constructs."@en ;
+    rdfs:subClassOf ucm:DefinitionArtifact .
+
 #################################################################
 # CONDITIONS / CLINICAL-SOCIAL SITUATIONS
 #################################################################
@@ -326,6 +398,15 @@ ucm:AllergyIntolerance a owl:Class ;
     rdfs:label "allergy intolerance"@en ;
     rdfs:comment "A dispositional condition involving risk of adverse response upon exposure to a substance, product, or class."@en ;
     rdfs:subClassOf ucm:HealthCondition , ucm:DispositionalCondition .
+
+ucm:Capability a owl:Class ;
+    rdfs:label "capability"@en ;
+    rdfs:comment "A disposition representing an ability of an entity to perform an action or participate in an activity under appropriate conditions. Capabilities support whole-person care modeling by representing what a person can do, such as climbing stairs, walking, preparing food, managing finances, or performing activities of daily living. Capabilities are distinct from conditions and needs, but they may be affected by conditions and may be evaluated by eligibility, placement, service, or care-planning criteria."@en ;
+    rdfs:subClassOf ucm:Attribute ,
+                    bfo:BFO_0000016 ;
+    ucm:hasBFOAlignment bfo:BFO_0000016 ;
+    ucm:alignmentSemantics "Grounded in BFO disposition and organized under UCM Attribute as a dependent property of an entity representing functional ability."@en .
+
 
 #################################################################
 # CLINICAL / EVALUATIVE QUALIFIERS
@@ -679,15 +760,21 @@ ucm:bearerOf a owl:ObjectProperty ;
     rdfs:range ucm:ActorRole ;
     owl:equivalentProperty bfo:BFO_0000196 .
 
+ucm:definedBy a owl:ObjectProperty ;
+    rdfs:label "defined by"@en ;
+    rdfs:comment "Relates an entity to a DefinitionArtifact that supplies the criteria, rules, thresholds, or contextual conditions used to constitute, classify, or interpret that entity. For Group, definedBy provides the semantic basis for group identity and intended membership; separate definition artifacts should normally produce separate Group instances, and identical membership across groups does not by itself establish group identity."@en ;
+    rdfs:domain owl:Thing ;
+    rdfs:range ucm:DefinitionArtifact .
+
 ucm:hasMember a owl:ObjectProperty ;
     rdfs:label "has member"@en ;
-    rdfs:comment "Relates a group to a person who belongs to it as a member. This is a structural membership relation, not process participation."@en ;
+    rdfs:comment "Relates a group to a person who belongs to it as a member under the group's definition artifact. This is a structural membership relation, not process participation."@en ;
     rdfs:domain ucm:Group ;
     rdfs:range ucm:Person .
 
 ucm:memberOf a owl:ObjectProperty ;
     rdfs:label "member of"@en ;
-    rdfs:comment "Relates a person to a group of which the person is a member. This is a structural membership relation, not process participation."@en ;
+    rdfs:comment "Relates a person to a group of which the person is a member under that group's definition artifact. This is a structural membership relation, not process participation."@en ;
     rdfs:domain ucm:Person ;
     rdfs:range ucm:Group ;
     owl:inverseOf ucm:hasMember ;
@@ -842,6 +929,19 @@ ucm:hasBasisInEligibility a owl:ObjectProperty ;
 #################################################################
 # OBJECT PROPERTIES — CONDITIONS / CLINICAL
 #################################################################
+
+ucm:hasCapability a owl:ObjectProperty ;
+    rdfs:label "has capability"@en ;
+    rdfs:comment "Relates an entity to a capability it bears. A capability is a disposition representing what the entity can do under appropriate conditions, such as climbing stairs, walking, preparing food, managing finances, or performing activities of daily living."@en ;
+    rdfs:domain ucm:PhysicalEntity ;
+    rdfs:range ucm:Capability .
+
+ucm:affectsCapability a owl:ObjectProperty ;
+    rdfs:label "affects capability"@en ;
+    rdfs:comment "Relates a condition to a capability that the condition influences, limits, enables, or otherwise bears on. This property supports modeling functional implications of health, behavioral, or social conditions without collapsing capability into condition or need."@en ;
+    rdfs:domain ucm:Condition ;
+    rdfs:range ucm:Capability .
+
 
 ucm:hasCondition a owl:ObjectProperty ;
     rdfs:label "has condition"@en ;
@@ -1056,6 +1156,12 @@ ucm:Report rdfs:subClassOf
     [ a owl:Restriction ;
       owl:onProperty ucm:hasStatement ;
       owl:allValuesFrom ucm:Statement ] .
+
+ucm:Capability rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty [ owl:inverseOf ucm:hasCapability ] ;
+      owl:someValuesFrom ucm:PhysicalEntity ] .
+
 
 #################################################################
 # EXAMPLE SPECIALIZATIONS
