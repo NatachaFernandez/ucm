@@ -1,5 +1,5 @@
 # hcls-fhir-rdf
-This repo is maintained by the [RDF subgroup of the HL7 ITS group](https://confluence.hl7.org/pages/viewpage.action?pageId=66922543), and is mostly used for tracking FHIR RDF [issues](https://github.com/w3c/hcls-fhir-rdf/issues).
+This repo is maintained by the [RDF subgroup of the HL7 ITS group](https://confluence.hl7.org/pages/viewpage.action?pageId=66922543), and is mostly used for tracking FHIR RDF [issues](https://github.com/w3c-cg/hcls-fhir-rdf/issues).
 
 ## State of affairs
 RDF (Turtle) is one of three official FHIR serialization formats, along with JSON and XML.  
