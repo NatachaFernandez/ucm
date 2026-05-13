@@ -14,7 +14,7 @@ ucm: a owl:Ontology ;
     rdfs:label "Unified Care Model (UCM)"@en ;
     owl:imports <http://www.ontologyrepository.com/CommonCoreOntologies/> ;
     owl:imports <http://hl7.org/fhir> ;
-    rdfs:comment "Unified Care Model ontology regenerated from the latest complete merged UCM source and updated with explicit condition typology, definition-driven group semantics, cross-domain DefinitionArtifact modeling, and ontology-level design principles."@en ;
+    rdfs:comment "Unified Care Model ontology regenerated from the latest complete merged UCM source and updated with explicit condition typology, definition-driven group semantics, cross-domain DefinitionArtifact modeling, computable RuleExpression support for DefinitionArtifacts, and ontology-level design principles."@en ;
     rdfs:comment "Design Principle 1 — Foundational Ontology Alignment Principle: The UCM is grounded in an upper-level ontology (SULO aligned with BFO). All core classes (e.g., PhysicalEntity, Process, Role, InformationEntity) inherit from this foundation to ensure logical consistency, interoperability, and reuse."@en ;
     rdfs:comment "Design Principle 2 — Role-Based Identity Principle: All contextual identities (e.g., Patient, Client, Member) are modeled as roles (ActorRole). A Person assumes these identities only through bearing the corresponding role."@en ;
     rdfs:comment "Design Principle 3 — Separation of Semantic Role vs Domain Terminology Principle: A common abstract role (SubjectRole) is used for process participation. Domain-specific roles (PatientRole, ClientRole, MemberRole) are maintained separately to preserve semantic and regulatory distinctions."@en ;
@@ -39,7 +39,8 @@ ucm: a owl:Ontology ;
     rdfs:comment "Design Principle 22 — Group Identity by Definition Principle: The identity and intended meaning of a Group are grounded in the DefinitionArtifact that defines it. Two Groups with identical members may remain distinct if they are defined by different artifacts."@en ;
     rdfs:comment "Design Principle 23 — Separate Groups for Separate Definitions Principle: When different definitions produce different memberships, or when different policies or domains define group membership differently, separate Group instances should be used rather than assigning multiple definitions to a single Group."@en ;
     rdfs:comment "Design Principle 24 — Membership Equivalence Outside Core Ontology Principle: Determining that two Groups happen to have the same members is an application, analytics, or governance concern and is not required to establish ontological identity in the UCM."@en ;
-    rdfs:comment "Design Principle 25 — Cross-Domain Definition Artifact Principle: DefinitionArtifact is a reusable informational construct that supplies the criteria, rules, or contextual conditions used to constitute, classify, or interpret entities across care domains. Group definition is one primary use, but the same pattern can also support conditions, eligibility, cohorts, populations, care focuses, programs, and other policy- or rule-defined constructs without embedding execution logic in the ontology."@en .
+    rdfs:comment "Design Principle 25 — Cross-Domain Definition Artifact Principle: DefinitionArtifact is a reusable informational construct that supplies the criteria, rules, or contextual conditions used to constitute, classify, or interpret entities across care domains. Group definition is one primary use, but the same pattern can also support conditions, eligibility, cohorts, populations, care focuses, programs, and other policy- or rule-defined constructs without embedding execution logic in the ontology."@en ;
+    rdfs:comment "Design Principle 26 — Computable Definition Artifact Principle: A DefinitionArtifact may optionally reference a RuleExpression that records computable criteria in an external rule, query, constraint, or expression language. The UCM stores and governs the expression metadata and content but does not require the ontology itself to execute the expression."@en .
 
 #################################################################
 # EXPLICIT ALIGNMENT ANNOTATIONS
@@ -347,6 +348,11 @@ ucm:OrganizationalDefinitionArtifact a owl:Class ;
     rdfs:label "organizational definition artifact"@en ;
     rdfs:comment "A definition artifact supplied by an organization or operational governance context. It may define group membership, care team composition, panels, operational assignments, service eligibility, or other organization-defined constructs."@en ;
     rdfs:subClassOf ucm:DefinitionArtifact .
+
+ucm:RuleExpression a owl:Class ;
+    rdfs:label "rule expression"@en ;
+    rdfs:comment "An informational entity that records a computable or machine-interpretable expression associated with a DefinitionArtifact. A RuleExpression may contain a query, constraint, rule, formula, expression, or other executable or interpretable representation in a declared expression language. The UCM treats the expression as governed content and does not require the ontology itself to execute it."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
 
 #################################################################
 # CONDITIONS / CLINICAL-SOCIAL SITUATIONS
@@ -766,6 +772,19 @@ ucm:definedBy a owl:ObjectProperty ;
     rdfs:domain owl:Thing ;
     rdfs:range ucm:DefinitionArtifact .
 
+ucm:hasExpression a owl:ObjectProperty ;
+    rdfs:label "has expression"@en ;
+    rdfs:comment "Relates a DefinitionArtifact to a RuleExpression that records computable criteria, such as a SPARQL query, SHACL shape, FHIRPath expression, SQL predicate, rules-engine expression, or other governed representation. The expression may support evaluation, validation, explanation, or derivation outside the OWL ontology."@en ;
+    rdfs:domain ucm:DefinitionArtifact ;
+    rdfs:range ucm:RuleExpression .
+
+ucm:membershipDeterminedBy a owl:ObjectProperty ;
+    rdfs:label "membership determined by"@en ;
+    rdfs:comment "Relates a Group to the GroupDefinitionArtifact used to determine or derive its intended membership. This property may be used when distinguishing computed or rule-derived membership from asserted membership while preserving definedBy as the general semantic definition relationship."@en ;
+    rdfs:domain ucm:Group ;
+    rdfs:range ucm:GroupDefinitionArtifact ;
+    rdfs:subPropertyOf ucm:definedBy .
+
 ucm:hasMember a owl:ObjectProperty ;
     rdfs:label "has member"@en ;
     rdfs:comment "Relates a group to a person who belongs to it as a member under the group's definition artifact. This is a structural membership relation, not process participation."@en ;
@@ -1138,6 +1157,29 @@ ucm:hasReactionEvent a owl:ObjectProperty ;
     rdfs:domain ucm:AllergyIntolerance ;
     rdfs:range ucm:AdverseReactionEvent .
 
+
+#################################################################
+# DATATYPE PROPERTIES — RULE EXPRESSIONS / DEFINITION ARTIFACTS
+#################################################################
+
+ucm:expressionLanguage a owl:DatatypeProperty ;
+    rdfs:label "expression language"@en ;
+    rdfs:comment "Identifies the language, notation, or formalism used by a RuleExpression, such as SPARQL, SHACL, FHIRPath, SQL, CQL, DMN, SWRL, JSONLogic, or a local rules language."@en ;
+    rdfs:domain ucm:RuleExpression ;
+    rdfs:range xsd:string .
+
+ucm:expressionBody a owl:DatatypeProperty ;
+    rdfs:label "expression body"@en ;
+    rdfs:comment "Contains the textual body of a RuleExpression. The body is stored as governed informational content and may be interpreted or executed by external tooling according to expressionLanguage."@en ;
+    rdfs:domain ucm:RuleExpression ;
+    rdfs:range xsd:string .
+
+ucm:expressionVersion a owl:DatatypeProperty ;
+    rdfs:label "expression version"@en ;
+    rdfs:comment "Records the version of a RuleExpression or of the rule language profile used to interpret it."@en ;
+    rdfs:domain ucm:RuleExpression ;
+    rdfs:range xsd:string .
+
 #################################################################
 # USEFUL CONSTRAINTS
 #################################################################
@@ -1162,6 +1204,16 @@ ucm:Capability rdfs:subClassOf
       owl:onProperty [ owl:inverseOf ucm:hasCapability ] ;
       owl:someValuesFrom ucm:PhysicalEntity ] .
 
+ucm:DefinitionArtifact rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty ucm:hasExpression ;
+      owl:allValuesFrom ucm:RuleExpression ] .
+
+ucm:GroupDefinitionArtifact rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty [ owl:inverseOf ucm:membershipDeterminedBy ] ;
+      owl:allValuesFrom ucm:Group ] .
+
 
 #################################################################
 # EXAMPLE SPECIALIZATIONS
@@ -1182,3 +1234,317 @@ ucm:HousingAssignmentProcess a owl:Class ;
         [ a owl:Restriction ;
           owl:onProperty ucm:assignsResource ;
           owl:someValuesFrom ucm:HousingUnit ] .
+
+
+#################################################################
+# SEMANTIC LAYER ENHANCEMENTS
+#################################################################
+
+
+#################################################################
+
+ucm:SemanticLayer a owl:Class ;
+    rdfs:label "semantic layer"@en ;
+    rdfs:comment "An informational construct that classifies a dimension of meaning applied to an entity or entity-related assertion. Semantic layers separate identity, intrinsic state, relationship, participation, responsibility, event, workflow, and temporal semantics."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:IdentityLayer a owl:Class ;
+    rdfs:label "identity layer"@en ;
+    rdfs:comment "The semantic layer that concerns what an entity fundamentally is, independent of operational or contextual use."@en ;
+    rdfs:subClassOf ucm:SemanticLayer .
+
+ucm:IntrinsicStateLayer a owl:Class ;
+    rdfs:label "intrinsic state layer"@en ;
+    rdfs:comment "The semantic layer that concerns conditions, capabilities, dispositions, or states inhering in an entity itself."@en ;
+    rdfs:subClassOf ucm:SemanticLayer .
+
+ucm:RelationshipLayer a owl:Class ;
+    rdfs:label "relationship layer"@en ;
+    rdfs:comment "The semantic layer that concerns structural associations between entities."@en ;
+    rdfs:subClassOf ucm:SemanticLayer .
+
+ucm:ParticipationLayer a owl:Class ;
+    rdfs:label "participation layer"@en ;
+    rdfs:comment "The semantic layer that concerns contextual involvement of an entity in a process, activity, service, event, or governed context."@en ;
+    rdfs:subClassOf ucm:SemanticLayer .
+
+ucm:ResponsibilityLayer a owl:Class ;
+    rdfs:label "responsibility layer"@en ;
+    rdfs:comment "The semantic layer that concerns accountability, stewardship, ownership, coordination responsibility, or operational obligation associated with an entity."@en ;
+    rdfs:subClassOf ucm:SemanticLayer .
+
+ucm:EventLayer a owl:Class ;
+    rdfs:label "event layer"@en ;
+    rdfs:comment "The semantic layer that concerns meaningful transitions, actions, occurrences, or state changes affecting entities, relationships, or responsibilities."@en ;
+    rdfs:subClassOf ucm:SemanticLayer .
+
+ucm:WorkflowLayer a owl:Class ;
+    rdfs:label "workflow layer"@en ;
+    rdfs:comment "The semantic layer that concerns operational orchestration, tasking, routing, queueing, escalation, and process management around entities and events."@en ;
+    rdfs:subClassOf ucm:SemanticLayer .
+
+ucm:TemporalLayer a owl:Class ;
+    rdfs:label "temporal layer"@en ;
+    rdfs:comment "The semantic layer that concerns time-bounded validity, duration, lifecycle interval, or effective period of states, relationships, participations, responsibilities, workflows, and events."@en ;
+    rdfs:subClassOf ucm:SemanticLayer .
+
+#################################################################
+# GENERALIZED ENTITY MODEL
+#################################################################
+
+ucm:GeneralizedEntity a owl:Class ;
+    rdfs:label "generalized entity"@en ;
+    rdfs:comment "A broad UCM abstraction for entities that may be described through semantic layers. Persons, organizations, devices, locations, services, programs, and other operational concepts may be treated as generalized entities for semantic-layer analysis."@en ;
+    rdfs:subClassOf owl:Thing .
+
+ucm:EntitySemanticProfile a owl:Class ;
+    rdfs:label "entity semantic profile"@en ;
+    rdfs:comment "An informational entity that organizes semantic-layer assertions about an entity without collapsing those assertions into the entity's intrinsic type."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:Person rdfs:subClassOf ucm:GeneralizedEntity .
+ucm:Organization rdfs:subClassOf ucm:GeneralizedEntity .
+ucm:Material rdfs:subClassOf ucm:GeneralizedEntity .
+ucm:Program rdfs:subClassOf ucm:GeneralizedEntity .
+ucm:ServiceSpecification rdfs:subClassOf ucm:GeneralizedEntity .
+ucm:CarePlan rdfs:subClassOf ucm:GeneralizedEntity .
+ucm:Group rdfs:subClassOf ucm:GeneralizedEntity .
+
+ucm:Device a owl:Class ;
+    rdfs:label "device"@en ;
+    rdfs:comment "A physical artifact that may participate in care, observation, service delivery, monitoring, or operational workflows."@en ;
+    rdfs:subClassOf ucm:Material , ucm:GeneralizedEntity .
+
+ucm:Location a owl:Class ;
+    rdfs:label "location"@en ;
+    rdfs:comment "A spatial entity or place that may be associated with persons, organizations, services, events, responsibilities, or workflows."@en ;
+    rdfs:subClassOf ucm:PhysicalEntity , ucm:GeneralizedEntity .
+
+#################################################################
+# LAYER ASSERTION / ENTITY-LAYER PROPERTIES
+#################################################################
+
+ucm:hasSemanticProfile a owl:ObjectProperty ;
+    rdfs:label "has semantic profile"@en ;
+    rdfs:comment "Relates an entity to an informational profile that organizes semantic-layer assertions about the entity."@en ;
+    rdfs:domain ucm:GeneralizedEntity ;
+    rdfs:range ucm:EntitySemanticProfile .
+
+ucm:profilesEntity a owl:ObjectProperty ;
+    rdfs:label "profiles entity"@en ;
+    rdfs:comment "Relates an entity semantic profile to the generalized entity it profiles."@en ;
+    rdfs:domain ucm:EntitySemanticProfile ;
+    rdfs:range ucm:GeneralizedEntity ;
+    owl:inverseOf ucm:hasSemanticProfile .
+
+ucm:hasSemanticLayer a owl:ObjectProperty ;
+    rdfs:label "has semantic layer"@en ;
+    rdfs:comment "Relates an entity semantic profile, statement, or assertion to the semantic layer that classifies the kind of meaning involved."@en ;
+    rdfs:domain owl:Thing ;
+    rdfs:range ucm:SemanticLayer .
+
+ucm:hasIdentitySemantics a owl:ObjectProperty ;
+    rdfs:label "has identity semantics"@en ;
+    rdfs:comment "Relates an entity or semantic profile to identity-layer semantics."@en ;
+    rdfs:subPropertyOf ucm:hasSemanticLayer ;
+    rdfs:range ucm:IdentityLayer .
+
+ucm:hasIntrinsicStateSemantics a owl:ObjectProperty ;
+    rdfs:label "has intrinsic state semantics"@en ;
+    rdfs:comment "Relates an entity or semantic profile to intrinsic-state-layer semantics."@en ;
+    rdfs:subPropertyOf ucm:hasSemanticLayer ;
+    rdfs:range ucm:IntrinsicStateLayer .
+
+ucm:hasRelationshipSemantics a owl:ObjectProperty ;
+    rdfs:label "has relationship semantics"@en ;
+    rdfs:comment "Relates an entity or semantic profile to relationship-layer semantics."@en ;
+    rdfs:subPropertyOf ucm:hasSemanticLayer ;
+    rdfs:range ucm:RelationshipLayer .
+
+ucm:hasParticipationSemantics a owl:ObjectProperty ;
+    rdfs:label "has participation semantics"@en ;
+    rdfs:comment "Relates an entity or semantic profile to participation-layer semantics."@en ;
+    rdfs:subPropertyOf ucm:hasSemanticLayer ;
+    rdfs:range ucm:ParticipationLayer .
+
+ucm:hasResponsibilitySemantics a owl:ObjectProperty ;
+    rdfs:label "has responsibility semantics"@en ;
+    rdfs:comment "Relates an entity or semantic profile to responsibility-layer semantics."@en ;
+    rdfs:subPropertyOf ucm:hasSemanticLayer ;
+    rdfs:range ucm:ResponsibilityLayer .
+
+ucm:hasEventSemantics a owl:ObjectProperty ;
+    rdfs:label "has event semantics"@en ;
+    rdfs:comment "Relates an entity or semantic profile to event-layer semantics."@en ;
+    rdfs:subPropertyOf ucm:hasSemanticLayer ;
+    rdfs:range ucm:EventLayer .
+
+ucm:hasWorkflowSemantics a owl:ObjectProperty ;
+    rdfs:label "has workflow semantics"@en ;
+    rdfs:comment "Relates an entity or semantic profile to workflow-layer semantics."@en ;
+    rdfs:subPropertyOf ucm:hasSemanticLayer ;
+    rdfs:range ucm:WorkflowLayer .
+
+ucm:hasTemporalSemantics a owl:ObjectProperty ;
+    rdfs:label "has temporal semantics"@en ;
+    rdfs:comment "Relates an entity or semantic profile to temporal-layer semantics."@en ;
+    rdfs:subPropertyOf ucm:hasSemanticLayer ;
+    rdfs:range ucm:TemporalLayer .
+
+#################################################################
+# RESPONSIBILITY MODEL
+#################################################################
+
+ucm:Responsibility a owl:Class ;
+    rdfs:label "responsibility"@en ;
+    rdfs:comment "An informational or operational construct representing accountability, stewardship, ownership, coordination obligation, or duty associated with an entity in a context."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:CoordinationResponsibility a owl:Class ;
+    rdfs:label "coordination responsibility"@en ;
+    rdfs:comment "A responsibility involving orchestration, alignment, monitoring, or coordination of activities, services, actors, or plans."@en ;
+    rdfs:subClassOf ucm:Responsibility .
+
+ucm:StewardshipResponsibility a owl:Class ;
+    rdfs:label "stewardship responsibility"@en ;
+    rdfs:comment "A responsibility involving maintaining, governing, managing, or caring for an entity, information artifact, plan, program, or process."@en ;
+    rdfs:subClassOf ucm:Responsibility .
+
+ucm:AccountabilityResponsibility a owl:Class ;
+    rdfs:label "accountability responsibility"@en ;
+    rdfs:comment "A responsibility involving answerability for an outcome, process, decision, resource, or governed context."@en ;
+    rdfs:subClassOf ucm:Responsibility .
+
+ucm:hasResponsibility a owl:ObjectProperty ;
+    rdfs:label "has responsibility"@en ;
+    rdfs:comment "Relates an entity to a responsibility it bears or is assigned within a context."@en ;
+    rdfs:domain ucm:GeneralizedEntity ;
+    rdfs:range ucm:Responsibility .
+
+ucm:responsibilityOf a owl:ObjectProperty ;
+    rdfs:label "responsibility of"@en ;
+    rdfs:comment "Relates a responsibility to the entity bearing or assigned that responsibility."@en ;
+    rdfs:domain ucm:Responsibility ;
+    rdfs:range ucm:GeneralizedEntity ;
+    owl:inverseOf ucm:hasResponsibility .
+
+ucm:responsibilityFor a owl:ObjectProperty ;
+    rdfs:label "responsibility for"@en ;
+    rdfs:comment "Relates a responsibility to the thing, process, need, condition, person, group, program, artifact, or context for which accountability or stewardship is held."@en ;
+    rdfs:domain ucm:Responsibility ;
+    rdfs:range owl:Thing .
+
+ucm:responsibilityInContext a owl:ObjectProperty ;
+    rdfs:label "responsibility in context"@en ;
+    rdfs:comment "Relates a responsibility to the process, program, organization, service, care plan, or governed context in which the responsibility applies."@en ;
+    rdfs:domain ucm:Responsibility ;
+    rdfs:range owl:Thing .
+
+ucm:assignedByProcess a owl:ObjectProperty ;
+    rdfs:label "assigned by process"@en ;
+    rdfs:comment "Relates a responsibility to the process that assigned, conferred, or established it."@en ;
+    rdfs:domain ucm:Responsibility ;
+    rdfs:range sulo:Process .
+
+#################################################################
+# TEMPORAL VALIDITY MODEL
+#################################################################
+
+ucm:TemporalContext a owl:Class ;
+    rdfs:label "temporal context"@en ;
+    rdfs:comment "An informational entity describing time-bounded validity, duration, effective interval, or lifecycle context for a state, relationship, participation, responsibility, workflow, or event."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:hasTemporalContext a owl:ObjectProperty ;
+    rdfs:label "has temporal context"@en ;
+    rdfs:comment "Relates a thing to the temporal context governing its validity, duration, or lifecycle."@en ;
+    rdfs:domain owl:Thing ;
+    rdfs:range ucm:TemporalContext .
+
+ucm:effectiveStart a owl:DatatypeProperty ;
+    rdfs:label "effective start"@en ;
+    rdfs:comment "Records the start time or date for a temporal context."@en ;
+    rdfs:domain ucm:TemporalContext ;
+    rdfs:range xsd:dateTime .
+
+ucm:effectiveEnd a owl:DatatypeProperty ;
+    rdfs:label "effective end"@en ;
+    rdfs:comment "Records the end time or date for a temporal context."@en ;
+    rdfs:domain ucm:TemporalContext ;
+    rdfs:range xsd:dateTime .
+
+ucm:temporalStatus a owl:DatatypeProperty ;
+    rdfs:label "temporal status"@en ;
+    rdfs:comment "Records a plain-language lifecycle or temporal status label for a temporal context, such as active, inactive, pending, suspended, completed, or historical."@en ;
+    rdfs:domain ucm:TemporalContext ;
+    rdfs:range xsd:string .
+
+#################################################################
+# WORKFLOW CONTEXT MODEL
+#################################################################
+
+ucm:WorkflowContext a owl:Class ;
+    rdfs:label "workflow context"@en ;
+    rdfs:comment "An informational entity describing operational orchestration, tasking, routing, queueing, escalation, or process-management context associated with entities, events, responsibilities, or processes."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:hasWorkflowContext a owl:ObjectProperty ;
+    rdfs:label "has workflow context"@en ;
+    rdfs:comment "Relates a thing to workflow context associated with its operational handling."@en ;
+    rdfs:domain owl:Thing ;
+    rdfs:range ucm:WorkflowContext .
+
+ucm:workflowStatus a owl:DatatypeProperty ;
+    rdfs:label "workflow status"@en ;
+    rdfs:comment "Records a plain-language operational status for a workflow context."@en ;
+    rdfs:domain ucm:WorkflowContext ;
+    rdfs:range xsd:string .
+
+ucm:workflowQueue a owl:DatatypeProperty ;
+    rdfs:label "workflow queue"@en ;
+    rdfs:comment "Records a queue, worklist, or routing label for a workflow context."@en ;
+    rdfs:domain ucm:WorkflowContext ;
+    rdfs:range xsd:string .
+
+#################################################################
+# INTRINSIC / CONTEXTUAL SEMANTIC SUPPORT
+#################################################################
+
+ucm:IntrinsicState a owl:Class ;
+    rdfs:label "intrinsic state"@en ;
+    rdfs:comment "A state, condition, capability, disposition, or quality inhering in an entity itself, distinguished from contextual role, participation, or workflow semantics."@en ;
+    rdfs:subClassOf ucm:Attribute .
+
+ucm:ContextualSemanticState a owl:Class ;
+    rdfs:label "contextual semantic state"@en ;
+    rdfs:comment "A semantic state that arises from a relationship, role, participation, responsibility, workflow, program, organization, or other context rather than from the intrinsic nature of the entity alone."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:Condition rdfs:subClassOf ucm:IntrinsicState .
+ucm:Capability rdfs:subClassOf ucm:IntrinsicState .
+ucm:ActorRole rdfs:subClassOf ucm:ContextualSemanticState .
+ucm:Participation rdfs:subClassOf ucm:ContextualSemanticState .
+ucm:Responsibility rdfs:subClassOf ucm:ContextualSemanticState .
+ucm:WorkflowContext rdfs:subClassOf ucm:ContextualSemanticState .
+
+#################################################################
+# USEFUL SEMANTIC-LAYER CONSTRAINTS
+#################################################################
+
+ucm:EntitySemanticProfile rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty ucm:profilesEntity ;
+      owl:someValuesFrom ucm:GeneralizedEntity ] .
+
+ucm:EntitySemanticProfile rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty ucm:hasSemanticLayer ;
+      owl:allValuesFrom ucm:SemanticLayer ] .
+
+ucm:Responsibility rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty ucm:responsibilityOf ;
+      owl:someValuesFrom ucm:GeneralizedEntity ] .
+
+ucm:TemporalContext rdfs:subClassOf ucm:InformationalEntity .
+ucm:WorkflowContext rdfs:subClassOf ucm:InformationalEntity .
