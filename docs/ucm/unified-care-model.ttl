@@ -40,7 +40,9 @@ ucm: a owl:Ontology ;
     rdfs:comment "Design Principle 23 — Separate Groups for Separate Definitions Principle: When different definitions produce different memberships, or when different policies or domains define group membership differently, separate Group instances should be used rather than assigning multiple definitions to a single Group."@en ;
     rdfs:comment "Design Principle 24 — Membership Equivalence Outside Core Ontology Principle: Determining that two Groups happen to have the same members is an application, analytics, or governance concern and is not required to establish ontological identity in the UCM."@en ;
     rdfs:comment "Design Principle 25 — Cross-Domain Definition Artifact Principle: DefinitionArtifact is a reusable informational construct that supplies the criteria, rules, or contextual conditions used to constitute, classify, or interpret entities across care domains. Group definition is one primary use, but the same pattern can also support conditions, eligibility, cohorts, populations, care focuses, programs, and other policy- or rule-defined constructs without embedding execution logic in the ontology."@en ;
-    rdfs:comment "Design Principle 26 — Computable Definition Artifact Principle: A DefinitionArtifact may optionally reference a RuleExpression that records computable criteria in an external rule, query, constraint, or expression language. The UCM stores and governs the expression metadata and content but does not require the ontology itself to execute the expression."@en .
+    rdfs:comment "Design Principle 26 — Computable Definition Artifact Principle: A DefinitionArtifact may optionally reference a RuleExpression that records computable criteria in an external rule, query, constraint, or expression language. The UCM stores and governs the expression metadata and content but does not require the ontology itself to execute the expression."@en ;
+    rdfs:comment "Design Principle 27 — Definition-Governed Membership Principle: Group membership should be represented as a contextual semantic state when membership validity, provenance, rule conformance, or temporal status must be governed. A GroupMembership explicitly binds a person, a group, and the definition artifact whose criteria govern that membership."@en ;
+    rdfs:comment "Design Principle 28 — Membership Conformance Separation Principle: The ontology records that a membership conforms to a definition artifact and may reference computable rule expressions, evidence, and evaluation processes; actual execution of criteria and validation remains external to the ontology unless represented through additional rule or constraint technology."@en .
 
 #################################################################
 # EXPLICIT ALIGNMENT ANNOTATIONS
@@ -354,6 +356,45 @@ ucm:RuleExpression a owl:Class ;
     rdfs:comment "An informational entity that records a computable or machine-interpretable expression associated with a DefinitionArtifact. A RuleExpression may contain a query, constraint, rule, formula, expression, or other executable or interpretable representation in a declared expression language. The UCM treats the expression as governed content and does not require the ontology itself to execute it."@en ;
     rdfs:subClassOf ucm:InformationalEntity .
 
+ucm:MembershipBasis a owl:Class ;
+    rdfs:label "membership basis"@en ;
+    rdfs:comment "An informational classification describing how a GroupMembership was established, such as assertion, rule derivation, enrollment, policy determination, or manual governance action."@en ;
+    rdfs:subClassOf ucm:InformationalEntity .
+
+ucm:AssertedMembershipBasis a owl:Class ;
+    rdfs:label "asserted membership basis"@en ;
+    rdfs:comment "A membership basis indicating that group membership was asserted by a person, organization, record, system, or other authority rather than computed directly from rule execution."@en ;
+    rdfs:subClassOf ucm:MembershipBasis .
+
+ucm:RuleDerivedMembershipBasis a owl:Class ;
+    rdfs:label "rule-derived membership basis"@en ;
+    rdfs:comment "A membership basis indicating that group membership was derived or validated by evaluating criteria associated with the group's definition artifact."@en ;
+    rdfs:subClassOf ucm:MembershipBasis .
+
+ucm:EnrollmentMembershipBasis a owl:Class ;
+    rdfs:label "enrollment membership basis"@en ;
+    rdfs:comment "A membership basis indicating that group membership was established through an enrollment, registration, assignment, or other formal administrative process."@en ;
+    rdfs:subClassOf ucm:MembershipBasis .
+
+ucm:GroupMembership a owl:Class ;
+    rdfs:label "group membership"@en ;
+    rdfs:comment "A contextual semantic state that explicitly represents a person's membership in a group under a governing GroupDefinitionArtifact. GroupMembership is used when membership validity, rule conformance, provenance, evidence, temporal status, or governance must be represented. It does not replace simple hasMember/memberOf assertions, but provides the fuller model for definition-governed membership."@en ;
+    rdfs:subClassOf ucm:ContextualSemanticState ,
+        [ a owl:Restriction ;
+          owl:onProperty ucm:membershipMember ;
+          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+          owl:onClass ucm:Person ],
+        [ a owl:Restriction ;
+          owl:onProperty ucm:membershipInGroup ;
+          owl:qualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+          owl:onClass ucm:Group ],
+        [ a owl:Restriction ;
+          owl:onProperty ucm:conformsToDefinition ;
+          owl:someValuesFrom ucm:GroupDefinitionArtifact ],
+        [ a owl:Restriction ;
+          owl:onProperty ucm:membershipBasis ;
+          owl:allValuesFrom ucm:MembershipBasis ] .
+
 #################################################################
 # CONDITIONS / CLINICAL-SOCIAL SITUATIONS
 #################################################################
@@ -618,6 +659,23 @@ ucm:EligibilityDeterminationProcess a owl:Class ;
           owl:onProperty ucm:determinesEligibilityFor ;
           owl:someValuesFrom owl:Thing ] .
 
+ucm:MembershipEvaluationProcess a owl:Class ;
+    rdfs:label "membership evaluation process"@en ;
+    rdfs:comment "An administrative process in which a person's membership in a group is evaluated, asserted, validated, derived, or established against the criteria supplied by a GroupDefinitionArtifact."@en ;
+    rdfs:subClassOf ucm:AdministrativeProcess ,
+        [ a owl:Restriction ;
+          owl:onProperty ucm:hasMembershipSubject ;
+          owl:someValuesFrom ucm:Person ],
+        [ a owl:Restriction ;
+          owl:onProperty ucm:evaluatesMembershipForGroup ;
+          owl:someValuesFrom ucm:Group ],
+        [ a owl:Restriction ;
+          owl:onProperty ucm:evaluatesAgainstDefinition ;
+          owl:someValuesFrom ucm:GroupDefinitionArtifact ],
+        [ a owl:Restriction ;
+          owl:onProperty ucm:resultsInGroupMembership ;
+          owl:someValuesFrom ucm:GroupMembership ] .
+
 ucm:EnrollmentProcess a owl:Class ;
     rdfs:label "enrollment process"@en ;
     rdfs:comment "An occurrent in which an entity becomes formally associated with a governed context."@en ;
@@ -787,17 +845,104 @@ ucm:membershipDeterminedBy a owl:ObjectProperty ;
 
 ucm:hasMember a owl:ObjectProperty ;
     rdfs:label "has member"@en ;
-    rdfs:comment "Relates a group to a person who belongs to it as a member under the group's definition artifact. This is a structural membership relation, not process participation."@en ;
+    rdfs:comment "Relates a group to a person who belongs to it as a member under the group's definition artifact. This is a structural shortcut relation, not process participation. When membership validity, conformance, evidence, provenance, basis, or temporal status must be represented, use GroupMembership with membershipMember and membershipInGroup."@en ;
     rdfs:domain ucm:Group ;
     rdfs:range ucm:Person .
 
 ucm:memberOf a owl:ObjectProperty ;
     rdfs:label "member of"@en ;
-    rdfs:comment "Relates a person to a group of which the person is a member under that group's definition artifact. This is a structural membership relation, not process participation."@en ;
+    rdfs:comment "Relates a person to a group of which the person is a member under that group's definition artifact. This is a structural shortcut relation, not process participation. When membership validity, conformance, evidence, provenance, basis, or temporal status must be represented, use GroupMembership with membershipMember and membershipInGroup."@en ;
     rdfs:domain ucm:Person ;
     rdfs:range ucm:Group ;
     owl:inverseOf ucm:hasMember ;
     owl:equivalentProperty schema:memberOf .
+
+ucm:hasGroupMembership a owl:ObjectProperty ;
+    rdfs:label "has group membership"@en ;
+    rdfs:comment "Relates a person to a GroupMembership contextual semantic state representing that person's membership in a group under a governing definition artifact."@en ;
+    rdfs:domain ucm:Person ;
+    rdfs:range ucm:GroupMembership .
+
+ucm:membershipOfPerson a owl:ObjectProperty ;
+    rdfs:label "membership of person"@en ;
+    rdfs:comment "Relates a GroupMembership to the person whose membership it represents."@en ;
+    rdfs:domain ucm:GroupMembership ;
+    rdfs:range ucm:Person ;
+    owl:inverseOf ucm:hasGroupMembership .
+
+ucm:membershipMember a owl:ObjectProperty ;
+    rdfs:label "membership member"@en ;
+    rdfs:comment "Relates a GroupMembership to the person who is the member of the group. This property is used to bind the membership state to the member and is intentionally distinct from direct structural hasMember."@en ;
+    rdfs:domain ucm:GroupMembership ;
+    rdfs:range ucm:Person ;
+    rdfs:subPropertyOf ucm:membershipOfPerson .
+
+ucm:groupHasMembership a owl:ObjectProperty ;
+    rdfs:label "group has membership"@en ;
+    rdfs:comment "Relates a group to a GroupMembership contextual semantic state that represents a person's membership in that group."@en ;
+    rdfs:domain ucm:Group ;
+    rdfs:range ucm:GroupMembership .
+
+ucm:membershipInGroup a owl:ObjectProperty ;
+    rdfs:label "membership in group"@en ;
+    rdfs:comment "Relates a GroupMembership to the group in which the person is a member."@en ;
+    rdfs:domain ucm:GroupMembership ;
+    rdfs:range ucm:Group ;
+    owl:inverseOf ucm:groupHasMembership .
+
+ucm:conformsToDefinition a owl:ObjectProperty ;
+    rdfs:label "conforms to definition"@en ;
+    rdfs:comment "Relates a GroupMembership to the DefinitionArtifact whose criteria the membership is asserted, derived, or validated to conform to. This records conformance to the governing artifact but does not require the OWL ontology itself to execute the criteria."@en ;
+    rdfs:domain ucm:GroupMembership ;
+    rdfs:range ucm:DefinitionArtifact .
+
+ucm:validatedAgainstExpression a owl:ObjectProperty ;
+    rdfs:label "validated against expression"@en ;
+    rdfs:comment "Relates a GroupMembership to a RuleExpression used to evaluate, validate, or explain the membership."@en ;
+    rdfs:domain ucm:GroupMembership ;
+    rdfs:range ucm:RuleExpression .
+
+ucm:membershipBasis a owl:ObjectProperty ;
+    rdfs:label "membership basis"@en ;
+    rdfs:comment "Relates a GroupMembership to an informational classification describing how the membership was established, such as assertion, rule derivation, enrollment, policy determination, or governance action."@en ;
+    rdfs:domain ucm:GroupMembership ;
+    rdfs:range ucm:MembershipBasis .
+
+ucm:establishedByProcess a owl:ObjectProperty ;
+    rdfs:label "established by process"@en ;
+    rdfs:comment "Relates a GroupMembership to the process that established, asserted, derived, validated, enrolled, or otherwise created the membership state."@en ;
+    rdfs:domain ucm:GroupMembership ;
+    rdfs:range sulo:Process .
+
+ucm:derivedFromEvidence a owl:ObjectProperty ;
+    rdfs:label "derived from evidence"@en ;
+    rdfs:comment "Relates a GroupMembership to evidence, statements, observations, records, or other artifacts used to support or derive the membership determination."@en ;
+    rdfs:domain ucm:GroupMembership ;
+    rdfs:range owl:Thing .
+
+ucm:hasMembershipSubject a owl:ObjectProperty ;
+    rdfs:label "has membership subject"@en ;
+    rdfs:comment "Relates a membership evaluation process to the person whose membership is being evaluated."@en ;
+    rdfs:domain ucm:MembershipEvaluationProcess ;
+    rdfs:range ucm:Person .
+
+ucm:evaluatesMembershipForGroup a owl:ObjectProperty ;
+    rdfs:label "evaluates membership for group"@en ;
+    rdfs:comment "Relates a membership evaluation process to the group for which membership is being evaluated."@en ;
+    rdfs:domain ucm:MembershipEvaluationProcess ;
+    rdfs:range ucm:Group .
+
+ucm:evaluatesAgainstDefinition a owl:ObjectProperty ;
+    rdfs:label "evaluates against definition"@en ;
+    rdfs:comment "Relates a membership evaluation process to the GroupDefinitionArtifact used as the membership criteria for evaluation."@en ;
+    rdfs:domain ucm:MembershipEvaluationProcess ;
+    rdfs:range ucm:GroupDefinitionArtifact .
+
+ucm:resultsInGroupMembership a owl:ObjectProperty ;
+    rdfs:label "results in group membership"@en ;
+    rdfs:comment "Relates a membership evaluation process to the GroupMembership state it establishes, validates, derives, or records."@en ;
+    rdfs:domain ucm:MembershipEvaluationProcess ;
+    rdfs:range ucm:GroupMembership .
 
 #################################################################
 # OBJECT PROPERTIES — PROVISIONING / ASSIGNMENT
@@ -1180,6 +1325,12 @@ ucm:expressionVersion a owl:DatatypeProperty ;
     rdfs:domain ucm:RuleExpression ;
     rdfs:range xsd:string .
 
+ucm:membershipStatus a owl:DatatypeProperty ;
+    rdfs:label "membership status"@en ;
+    rdfs:comment "Records a plain-language lifecycle or validity status for a GroupMembership, such as active, inactive, pending, provisional, validated, rejected, superseded, or historical."@en ;
+    rdfs:domain ucm:GroupMembership ;
+    rdfs:range xsd:string .
+
 #################################################################
 # USEFUL CONSTRAINTS
 #################################################################
@@ -1213,6 +1364,23 @@ ucm:GroupDefinitionArtifact rdfs:subClassOf
     [ a owl:Restriction ;
       owl:onProperty [ owl:inverseOf ucm:membershipDeterminedBy ] ;
       owl:allValuesFrom ucm:Group ] .
+
+ucm:GroupMembership rdfs:subClassOf
+    [ a owl:Restriction ;
+      owl:onProperty ucm:membershipMember ;
+      owl:allValuesFrom ucm:Person ],
+    [ a owl:Restriction ;
+      owl:onProperty ucm:membershipInGroup ;
+      owl:allValuesFrom ucm:Group ],
+    [ a owl:Restriction ;
+      owl:onProperty ucm:conformsToDefinition ;
+      owl:allValuesFrom ucm:GroupDefinitionArtifact ],
+    [ a owl:Restriction ;
+      owl:onProperty ucm:validatedAgainstExpression ;
+      owl:allValuesFrom ucm:RuleExpression ],
+    [ a owl:Restriction ;
+      owl:onProperty ucm:establishedByProcess ;
+      owl:allValuesFrom sulo:Process ] .
 
 
 #################################################################
@@ -1526,6 +1694,7 @@ ucm:ActorRole rdfs:subClassOf ucm:ContextualSemanticState .
 ucm:Participation rdfs:subClassOf ucm:ContextualSemanticState .
 ucm:Responsibility rdfs:subClassOf ucm:ContextualSemanticState .
 ucm:WorkflowContext rdfs:subClassOf ucm:ContextualSemanticState .
+ucm:GroupMembership rdfs:subClassOf ucm:ContextualSemanticState .
 
 #################################################################
 # USEFUL SEMANTIC-LAYER CONSTRAINTS
