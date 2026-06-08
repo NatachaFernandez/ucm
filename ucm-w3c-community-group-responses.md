@@ -16,6 +16,8 @@ As a result, organizations face significant challenges in achieving semantic int
 
 The group seeks to address the lack of a shared semantic framework that can bridge these heterogeneous domain models while preserving their meaning. The goal is to enable more accurate data exchange, integration, reasoning, and reuse across care domains.
 
+The solution to this problem is described as Whole Person Care.
+
 ## **What is the mission of this Group?**
 
 The mission of the group is to develop an open, computable semantic cross-domain framework for care domains that enables semantic interoperability and equivalence across healthcare, social care, housing, justice, education, and related human-service ecosystems.
@@ -26,25 +28,23 @@ The group will develop the Unified Care Model (UCM), a high-level ontology and s
 
 ## **Design Principles**
 
-The current version of the project Design Principles document can be found at:
-
-\[Insert Link to Design Principles Document\]
+The current version of the project Design Principles document can be found at: https://github.com/hserv/ucm/blob/main/ucm-design-principles.md
 
 Key design principles include *such as*:
 
 • UCM developed as an OWL ontology supporting Description Logic reasoning.  
 • Uses BFO as the ontological foundation.  
 • Leverages SULO as a semantic classification framework.  
-• Aligns with HL7, HUD, NIEM and other domain artifacts.  
-• Layered architecture consisting of Core Concepts, Participation Concepts, and Domain Concepts.  
-•Enable independent extension by different subject matter experts while maintaining semantic consistency through a shared core.  
+• Goal is to align model with HL7, HUD, NIEM and other domain artifacts.  
+• Layered architecture of Core Concepts, Participation Concepts, and Domain Concepts.  
+• Enable independent extension by different subject matter experts while maintaining semantic consistency through a shared core.  
 • Emphasizes reuse, extensibility, semantic clarity, and cross-domain interoperability.
 
 ## **Will the Group Publish Specifications?**
 
 Yes. The long-term goal of the group is to publish one or more open specifications describing the Unified Care Model and its associated semantic framework.
 
-The group anticipates beginning with the publication of a W3C Community Group Report or White Paper.
+The group anticipates producing a W3C Community Group Report.
 
 *Spec as a starting point?*
 
