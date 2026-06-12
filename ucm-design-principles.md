@@ -10,6 +10,8 @@ The architecture separates foundational semantic primitives, contextual particip
 
 ## **1\. Architectural Vision**
 
+* Treat Care Plan as the primary coordination and execution construct across domains
+* Support longitudinal, adaptive planning and coordination intervention execution
 * Separate stable identity from contextual participation semantics  
 * Provide reusable semantic participation infrastructure  
 * Enable independently evolvable domain semantic models  
@@ -132,6 +134,19 @@ PatientRole / ClientRole / ResidentRole
     within  
 ClinicalCareContext / HousingContext / SocialCareContext
 
+### **4.4 Care Plan**
+
+The care Plan represents a coordinaito and execution construct within the UCM and is composed from Core, Participation, and Domain semantics.
+
+Key chracteristics: 
+    * Organizes problems, goals, objectives, interventions, services, responsibilities, and expected outcomes          into a coordinated plan of action.
+    * Supports collaboration and execution accross participating domains and team members.
+    * Enables longitudinal and interdisciplinary coordination while preserving domain-specific responsibilities        and expertise.
+    * Evolve over time as goals are achieved, modificed, unmet, or reprioritized.
+    * Supports multiple intervention modalities andservice types across domains.
+    * Is composed from semantic elements and relationships rathr than acting as foundational primitives.
+Detailed Care Plan semantics, structure, lifecycle and mappings are defined in [Natacha Addd link to file]
+    
 ## **5\. Domain Models**
 
 Domain Models specialize participation and core semantics for specific operational and semantic ecosystems.
