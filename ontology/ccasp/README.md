@@ -96,6 +96,16 @@ CCaSP represents the actor layer of the UCM and may interact with:
 * Supportive Services
 * Care Teams
 
+## Diagrams
+
+The diagrams folder contains conceptual visualizations of the Care Coordination and Support Personnel (CCaSP) ontology.
+
+Current diagrams:
+
+* `actor_relationships.md` — visual representation of actor hierarchy, shared characteristics, shared capabilities, and work objects.
+
+These diagrams are conceptual artifacts and do not represent implementation constraints.
+
 ## Status
 
 Draft – under active development.
