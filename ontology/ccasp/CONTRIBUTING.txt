@@ -1,0 +1,50 @@
+## Definition Quality Standard
+
+Definitions should follow ontology class definition practices.
+
+### Required Definition Pattern
+
+```text
+A [Class] is a [Parent Class] that [distinguishing characteristics].
+```
+
+Example:
+
+```text
+A Care Coordinator is a person role that organizes and facilitates continuity of services across care settings.
+```
+
+### Definition Checklist
+
+Definitions should:
+
+* State what the class is
+* Use singular form
+* Be concise but complete
+* Avoid circular definitions
+* Use domain-neutral language
+* Define concepts rather than implementation
+* Focus on essential characteristics
+* Avoid embedding relationships that belong in the model
+* Differentiate neighboring concepts
+* Use consistent wording patterns
+* Avoid examples in the definition
+* Avoid operational rules
+* Be testable
+
+### Definition Review Process
+
+Before approval, verify:
+
+| Check                                         | Pass |
+| --------------------------------------------- | ---- |
+| Uses class → parent → characteristics pattern |      |
+| Uses singular form                            |      |
+| Avoids implementation language                |      |
+| Avoids circular wording                       |      |
+| Uses domain-neutral language                  |      |
+| Differentiates neighboring concepts           |      |
+| Definition is testable                        |      |
+
+Definitions failing review should be revised before terminology mapping or publication.
+
