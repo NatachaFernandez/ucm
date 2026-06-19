@@ -1,0 +1,20 @@
+﻿Workbook Version,v0.1
+Status,Draft
+Last Updated,6/18/2026
+Respository,ucm-repo
+Domain,Care Coordination
+Author,Natacha Fernandez
+Steward,UCM
+Owner,TBD
+Notes,Initial CCaSP ontology model
+,
+Fields,Value
+RFCC ID,RFCC-ACTOR-CCASP-001
+Concept Name,Care Coordination and Support Personnel (CCaSP)
+Concept Type,Actor Category
+Definition,"Individuals or workforce roles responsible for coordinating, navigating, facilitating, managing, monitoring, or supporting access to healthcare, behavioral health, social care, community resources, and referral services, and who work with care plans or equivalent plans to promote continuity of care, reduce barriers, and hep individuals archive health and wellbeing goals across care settings and organizations."
+Parent Concept,Personnel
+Includes,"Care Coordinator, Care Navigator, Case Manager, Case Worker, Patient Navigator, Community Resource Navigator, Community Outreach Worker, Community Health Worker, etc."
+Excludes,"Tools, services, diagnosis, direct clinical treatment authority"
+Status,Draft
+Notes,Canonical umbrella actor category for RFCC

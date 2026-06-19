@@ -1,0 +1,18 @@
+﻿Definitions:,,,,,,,,,,,,
+Primary (P) = Core expected function of the role,,,,,,,,,,,,
+Secondary (S) = Common supporting function,,,,,,,,,,,,
+"Situational (ST) = Depends on setting, program, scope, or implementation",,,,,,,,,,,,
+,,,,,,,,,,,,
+Role,Coordinate,Navigate,Assess,Refer,Care Plan,Monitor,Connect,Communicate,Document,Follow Up,Advocate,Reduce Barriers
+Care Coordinator,P,p,P,P,P,P,P,P,P,P,S,P
+Case Manager,P,S,P,P,P,P,P,P,P,P,P,P
+Patient Navigator,S,P,ST,P,P,S,P,P,S,P,P,P
+Community Outreach Worker,S,P,P,ST,ST,P,P,P,S,P,P,P
+Care Navigator,S,P,S,P,P,S,P,P,S,P,P,P
+Community Health Worker,S,P,S,S,ST,S,P,P,S,P,P,P
+Social Care Coordinator,P,P,P,P,P,P,P,P,P,P,S,P
+Case Worker,P,S,P,P,P,P,P,P,P,P,S,P
+Community Resource Navigator / Resource Navigator (RNAV),S,P,S,P,ST,S,P,P,S,P,S,P
+Referral Coordinator,P,S,ST,P,ST,P,S,P,P,P,S,S
+Resource Specialist,S,P,S,S,ST,S,P,P,S,S,S,P
+Peer Support Specialist,S,P,ST,S,ST,S,P,P,S,P,P,P

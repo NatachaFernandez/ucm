@@ -1,0 +1,15 @@
+﻿Care Coordination and Support Personnel (CCaSP) - Shared Characteristics,,
+(Shared attributes and functional patterns across roles),,
+"Shared characteristics are the common attributes and patterns of participants that distinguish Care Coordination and Support Personnel roles independent of specific title, credentials, organizations, or care setting.",,
+CHAR ID,Characteristic,Description
+CHAR-001,Person / Human Actor,"The role is performed by an individual (not a system, service, or organization)."
+CHAR-002,Support - Oriented Function,"Primary purpose is enabling access, coordination, engagement, or continuity rather than direct clinical diagnosis/treatment."
+CHAR-003,Cross-Services Coordination,"Operates across healthcare, behavioral health, social care, community, and enabling services."
+CHAR-004,Connection and Facilitation,Identifies needs and connects individuals to appropriate services or resources.
+CHAR-005,Care Plan Participation,"Works with a shared care plan or equivalent plan of care to document, coordinate, guide, monitor, or support services and goals across settings and organizations."
+CHAR-006,Barrier Reduction,"Addresses logistical, administrative, social, financial, geographic, or knowledge barriers."
+CHAR-007,Longitudinal Engagement,May interact over time rather than a single encounter.
+CHAR-008,Referral Participation,"Receives, facilitates, initiates, tracks, or closes referrals."
+CHAR-009,Care Continuity Focus,Supports transitions and continuity across settings and organizations.
+CHAR-010,Person-Centered Approach,Activities are organized around individual goals and preferences.
+CHAR-011,Monitoring / Follow-Up,"Frequently includes tracking completion, outcomes, or service engagement."

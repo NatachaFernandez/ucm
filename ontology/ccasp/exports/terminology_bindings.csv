@@ -1,0 +1,31 @@
+﻿Purpose: Maps RFCC/UCM concepts to external terminology and interoperability standards.,,,,,,,,,,,,
+RFCC ID,Concept Nane,Source Tab,Concept Type,SNOMED CT,LOINC,FHIR Resource,Binding Type,Binding Status,Verification Status,Source Authority,Reviewer,Notes
+RFCC-ACTOR-CCASP-001,Care Coordination and Support Personnel (CCaSP),01_Definition,Actor Category,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Canonical umbrella actor concept
+ROLE-001,Care Coordinator,02_Roles,Role,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Coordination-focused actor
+ROLE-002,Care Navigator,02_Roles,Role,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Navigation-focused actor
+ROLE-003,Case Manager,02_Roles,Role,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Longitudinal care management
+ROLE-004,Patient Navigator,02_Roles,Role,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Patient guidance and access
+ROLE-005,Community Health Worker,02_Roles,Role,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Community engagement and support
+ROLE-006,Social Care Coordinator,02_Roles,Role,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Cross-domain coordination
+ROLE-007,Case Worker,02_Roles,Role,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Service facilitation and monitoring
+ROLE-008,Community Resource Navigator / Resource Navigator (RNAV),02_Roles,Role,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Resource navigation and access
+ROLE-009,Community Outreach Worker,02_Roles,Role,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Outreach and engagement
+ROLE-010,Referral Coordinator,02_Roles,Role,TBD,TBD,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Referral workflow participation
+ROLE-011,Resource Specialist,02_Roles,Role,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Resource identification and connection
+ROLE-012,Peer Support Specialist,02_Roles,Role,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Lived experience support
+CHAR-001,Human Actor,03_Shared_Characteristics,Characteristic,TBD,—,PractitionerRole,TBD,Draft,Not Reviewed,RFCC,,Role performed by a person
+CHAR-004,Care Plan Participation,03_Shared_Characteristics,Characteristic,TBD,TBD,CarePlan,TBD,Draft,Not Reviewed,RFCC,,"Participation in plan creation, contribution, execution, or monitoring"
+CHAR-007,Referral Participation,03_Shared_Characteristics,Characteristic,TBD,TBD,ServiceRequest,TBD,Draft,Not Reviewed,RFCC,,"Referral initiation, receipt, facilitation, tracking, or closure"
+CHAR-010,Monitoring and Follow-Up,03_Shared_Characteristics,Characteristic,TBD,TBD,Observation,TBD,Draft,Not Reviewed,RFCC,,Tracking engagement and outcomes
+CAP-001,Coordinate,04_Shared_Capabilities,Capability,TBD,—,CareTeam,TBD,Draft,Not Reviewed,RFCC,,Organize services and activities
+CAP-002,Navigate,04_Shared_Capabilities,Capability,TBD,—,CareTeam,TBD,Draft,Not Reviewed,RFCC,,Support access to services
+CAP-003,Assess,04_Shared_Capabilities,Capability,TBD,TBD,Observation,TBD,Draft,Not Reviewed,RFCC,,Identify needs and barriers
+CAP-004,Refer,04_Shared_Capabilities,Capability,TBD,TBD,ServiceRequest,TBD,Draft,Not Reviewed,RFCC,,Referral-related activities
+CAP-005,Care Plan,04_Shared_Capabilities,Capability,TBD,TBD,CarePlan,TBD,Draft,Not Reviewed,RFCC,,Work with care plans
+CAP-006,Monitor,04_Shared_Capabilities,Capability,TBD,TBD,Observation,TBD,Draft,Not Reviewed,RFCC,,Track progress and outcomes
+CAP-007,Connect,04_Shared_Capabilities,Capability,TBD,—,CareTeam,TBD,Draft,Not Reviewed,RFCC,,Link individuals to services
+CAP-008,Communicate,04_Shared_Capabilities,Capability,TBD,—,Communication,TBD,Draft,Not Reviewed,RFCC,,Exchange information
+CAP-009,Document,04_Shared_Capabilities,Capability,TBD,TBD,DocumentReference,TBD,Draft,Not Reviewed,RFCC,,Record coordination activities
+CAP-010,Follow Up,04_Shared_Capabilities,Capability,TBD,TBD,Task,TBD,Draft,Not Reviewed,RFCC,,Support continuity and completion
+CAP-011,Advocate,04_Shared_Capabilities,Capability,TBD,—,CareTeam,TBD,Draft,Not Reviewed,RFCC,,Support goals and participation
+CAP-012,Reduce Barriers,04_Shared_Capabilities,Capability,TBD,TBD,Observation,TBD,Draft,Not Reviewed,RFCC,,Address access and engagement obstacles
